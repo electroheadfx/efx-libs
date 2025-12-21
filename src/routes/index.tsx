@@ -60,19 +60,24 @@ function Dashboard() {
     columns: ['1fr', '1fr', '1fr', '300px'],
     rows: ['100px', '1fr', '1fr', '350px'],
     gap: 16,
+    padding: { top: 0, right: 0, bottom: 24, left: 0 },
   };
 
   return (
     <ThemeProvider>
-      <div className="min-h-screen p-4 bg-rs-body">
-        <header className="mb-6">
+      <div className="h-[calc(100vh-72px)] p-4 pb-0 bg-rs-body overflow-hidden">
+        <header className="mb-4 pb-2">
           <h1 className="text-2xl font-bold text-rs-heading">Analytics Dashboard</h1>
           <p className="text-rs-secondary text-sm">
             Last updated: {new Date(data.lastUpdated).toLocaleString()}
           </p>
         </header>
 
-        <DashboardLayout template={dashboardTemplate} className="min-h-[calc(100vh-120px)]">
+        <DashboardLayout 
+          template={dashboardTemplate} 
+          fillViewport 
+          viewportOffset="172px"
+        >
           {/* KPI Cards */}
           <LayoutItem area="kpi1">
             <KPICard

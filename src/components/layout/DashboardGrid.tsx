@@ -47,7 +47,7 @@ export function DashboardGrid({
       } as React.CSSProperties}
     >
       {Children.map(children, (child) => (
-        <div className="min-h-[200px]">{child}</div>
+        <div className="min-h-50">{child}</div>
       ))}
     </div>
   );
