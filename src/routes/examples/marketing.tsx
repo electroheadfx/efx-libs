@@ -4,11 +4,7 @@ import { ComboChart, DualAxisChart, MultiGridChart } from "@/components/charts";
 import type { LayoutOption } from "@/components/controls";
 import { ControlBar } from "@/components/controls";
 import { StatsList } from "@/components/ui";
-import {
-	generateSalesData,
-	generateScatterData,
-	randomSeed,
-} from "@/lib/sampleDataGenerator";
+import { generateSalesData, randomSeed } from "@/lib/sampleDataGenerator";
 import { ThemeProvider, useAppTheme } from "@/providers/ThemeProvider";
 
 export const Route = createFileRoute("/examples/marketing")({
@@ -43,7 +39,6 @@ function MarketingContent() {
 	}, [theme, setTheme]);
 
 	const currentLayout = layouts[currentIndex];
-	const _scatterData = generateScatterData(35, 0.65, seed + 12);
 	const engagementData = generateSalesData(12, seed + 3);
 	const growthData = generateSalesData(12, seed + 4);
 	const volumeData = generateSalesData(12, seed + 5);
@@ -219,7 +214,7 @@ function MarketingContent() {
 							<StatsList
 								data={campaignStats}
 								title="Campaign Stats"
-								className="flex-shrink-0"
+								className="shrink-0"
 							/>
 						</div>
 					</>
@@ -264,7 +259,7 @@ function MarketingContent() {
 							<StatsList
 								data={audienceStats}
 								title="Funnel Metrics"
-								className="flex-shrink-0"
+								className="shrink-0"
 							/>
 						</div>
 					</>

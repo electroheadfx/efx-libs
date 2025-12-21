@@ -4,11 +4,7 @@ import { ComboChart, DualAxisChart, MultiGridChart } from "@/components/charts";
 import type { LayoutOption } from "@/components/controls";
 import { ControlBar } from "@/components/controls";
 import { StatsList } from "@/components/ui";
-import {
-	generateSalesData,
-	generateScatterData,
-	randomSeed,
-} from "@/lib/sampleDataGenerator";
+import { generateSalesData, randomSeed } from "@/lib/sampleDataGenerator";
 import { ThemeProvider, useAppTheme } from "@/providers/ThemeProvider";
 
 export const Route = createFileRoute("/examples/operations")({
@@ -47,7 +43,6 @@ function OperationsContent() {
 	}, [theme, setTheme]);
 
 	const currentLayout = layouts[currentIndex];
-	const _scatterData = generateScatterData(40, 0.55, seed + 20);
 	const throughputData = generateSalesData(12, seed + 5);
 	const productivityData = generateSalesData(12, seed + 6);
 	const queueData = generateSalesData(12, seed + 7);
@@ -212,7 +207,7 @@ function OperationsContent() {
 							<StatsList
 								data={liveStats}
 								title="Live Stats"
-								className="flex-shrink-0"
+								className="shrink-0"
 							/>
 						</div>
 					</>
@@ -257,7 +252,7 @@ function OperationsContent() {
 							<StatsList
 								data={liveStats}
 								title="Daily Summary"
-								className="flex-shrink-0"
+								className="shrink-0"
 							/>
 						</div>
 					</>

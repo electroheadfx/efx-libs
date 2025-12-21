@@ -52,14 +52,12 @@ export function KPICard({
 				className={`h-full flex items-center justify-between px-3 py-2 rounded-md border border-rs-border bg-rs-bg-card ${className}`}
 			>
 				<div className="flex items-center gap-2 min-w-0">
-					{icon && (
-						<span className="text-rs-primary flex-shrink-0">{icon}</span>
-					)}
+					{icon && <span className="text-rs-primary shrink-0">{icon}</span>}
 					<Text size="sm" className="text-rs-secondary truncate">
 						{title}
 					</Text>
 				</div>
-				<div className="flex items-center gap-2 flex-shrink-0">
+				<div className="flex items-center gap-2 shrink-0">
 					<span
 						style={{
 							fontSize: "1.125rem",

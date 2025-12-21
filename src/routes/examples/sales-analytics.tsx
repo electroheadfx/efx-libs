@@ -191,7 +191,7 @@ function SalesAnalyticsContent() {
 							<StatsList
 								data={data.stats}
 								title="Key Metrics"
-								className="flex-shrink-0"
+								className="shrink-0"
 							/>
 						</div>
 					</>
@@ -236,7 +236,7 @@ function SalesAnalyticsContent() {
 							<StatsList
 								data={data.stats}
 								title="Executive KPIs"
-								className="flex-shrink-0"
+								className="shrink-0"
 							/>
 						</div>
 					</>

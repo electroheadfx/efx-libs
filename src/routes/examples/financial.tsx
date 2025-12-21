@@ -201,7 +201,7 @@ function FinancialContent() {
 							<StatsList
 								data={financialStats}
 								title="Financials"
-								className="flex-shrink-0"
+								className="shrink-0"
 							/>
 						</div>
 					</>
@@ -248,7 +248,7 @@ function FinancialContent() {
 							<StatsList
 								data={financialStats}
 								title="Summary"
-								className="flex-shrink-0"
+								className="shrink-0"
 							/>
 						</div>
 					</>

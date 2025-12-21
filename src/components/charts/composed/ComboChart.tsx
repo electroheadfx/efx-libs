@@ -1,21 +1,16 @@
 "use client";
 
 import type { EChartsOption } from "echarts";
+import type { TimeSeriesDataPoint } from "@/types/chart.types";
 import { ChartContainer } from "../core/ChartContainer";
-
-interface TimeSeriesData {
-	date: string;
-	value: number;
-	[key: string]: unknown;
-}
 
 interface ComboChartProps {
 	/** Primary data series (displayed as line) */
-	lineData: TimeSeriesData[];
+	lineData: TimeSeriesDataPoint[];
 	/** Secondary data series (displayed as bar) */
-	barData: TimeSeriesData[];
+	barData: TimeSeriesDataPoint[];
 	/** Optional third series (displayed as scatter) */
-	scatterData?: TimeSeriesData[];
+	scatterData?: TimeSeriesDataPoint[];
 	/** Field names */
 	xField?: string;
 	lineField?: string;
@@ -52,7 +47,14 @@ export function ComboChart({
 	loading,
 }: ComboChartProps) {
 	// Extract x-axis categories from line data
-	const xCategories = lineData.map((d) => d[xField] as string);
+	const xCategories = lineData.map((d) => {
+		const dateValue = d[xField];
+		return typeof dateValue === "string"
+			? dateValue
+			: dateValue instanceof Date
+				? dateValue.toISOString()
+				: String(dateValue);
+	});
 
 	// Extract y values
 	const lineValues = lineData.map((d) => d[lineField] as number);

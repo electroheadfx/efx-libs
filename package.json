@@ -1,4 +1,5 @@
 {
+  "version": "1.0.0",
   "name": "tanstack-start-multi-charts",
   "private": true,
   "type": "module",

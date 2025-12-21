@@ -1,28 +1,21 @@
 "use client";
 
 import type { EChartsOption, SeriesOption } from "echarts";
+import type {
+	CategoricalDataPoint,
+	TimeSeriesDataPoint,
+} from "@/types/chart.types";
 import { ChartContainer } from "../core/ChartContainer";
-
-interface TimeSeriesData {
-	date: string;
-	value: number;
-	[key: string]: unknown;
-}
-
-interface CategoryData {
-	category: string;
-	value: number;
-}
 
 interface MultiGridChartProps {
 	/** Time series data for line chart (top-left grid) */
-	lineData: TimeSeriesData[];
+	lineData: TimeSeriesDataPoint[];
 	/** Time series data for area chart (top-right grid) */
-	areaData: TimeSeriesData[];
+	areaData: TimeSeriesDataPoint[];
 	/** Category data for bar chart (bottom-left grid) */
-	barData: CategoryData[];
+	barData: CategoricalDataPoint[];
 	/** Category data for horizontal bar (bottom-right grid) */
-	hBarData: CategoryData[];
+	hBarData: CategoricalDataPoint[];
 	/** Chart title */
 	title?: string;
 	/** Styling */
@@ -68,13 +61,17 @@ export function MultiGridChart({
 			{
 				type: "category",
 				gridIndex: 0,
-				data: lineData.map((d) => d.date),
+				data: lineData.map((d) =>
+					typeof d.date === "string" ? d.date : d.date.toISOString(),
+				),
 				axisLabel: { fontSize: 10 },
 			},
 			{
 				type: "category",
 				gridIndex: 1,
-				data: areaData.map((d) => d.date),
+				data: areaData.map((d) =>
+					typeof d.date === "string" ? d.date : d.date.toISOString(),
+				),
 				axisLabel: { fontSize: 10 },
 			},
 			{
@@ -166,8 +163,8 @@ export function MultiGridChart({
 
 interface SplitPanelChartProps {
 	/** Left chart: Line + Bar overlay */
-	leftLineData: TimeSeriesData[];
-	leftBarData: TimeSeriesData[];
+	leftLineData: TimeSeriesDataPoint[];
+	leftBarData: TimeSeriesDataPoint[];
 	/** Right chart: Scatter data */
 	rightScatterData: Array<{ x: number; y: number }>;
 	/** Labels */
@@ -221,7 +218,9 @@ export function SplitPanelChart({
 			{
 				type: "category",
 				gridIndex: 0,
-				data: leftLineData.map((d) => d.date),
+				data: leftLineData.map((d) =>
+					typeof d.date === "string" ? d.date : d.date.toISOString(),
+				),
 			},
 			{
 				type: "value",

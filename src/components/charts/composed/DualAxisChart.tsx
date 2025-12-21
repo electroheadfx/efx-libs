@@ -1,19 +1,14 @@
 "use client";
 
 import type { EChartsOption } from "echarts";
+import type { TimeSeriesDataPoint } from "@/types/chart.types";
 import { ChartContainer } from "../core/ChartContainer";
-
-interface TimeSeriesData {
-	date: string;
-	value: number;
-	[key: string]: unknown;
-}
 
 interface DualAxisChartProps {
 	/** Primary data (left Y-axis, bar chart) */
-	primaryData: TimeSeriesData[];
+	primaryData: TimeSeriesDataPoint[];
 	/** Secondary data (right Y-axis, line chart) */
-	secondaryData: TimeSeriesData[];
+	secondaryData: TimeSeriesDataPoint[];
 	/** Field configuration */
 	xField?: string;
 	primaryField?: string;
@@ -48,7 +43,14 @@ export function DualAxisChart({
 	className,
 	loading,
 }: DualAxisChartProps) {
-	const xCategories = primaryData.map((d) => d[xField] as string);
+	const xCategories = primaryData.map((d) => {
+		const dateValue = d[xField];
+		return typeof dateValue === "string"
+			? dateValue
+			: dateValue instanceof Date
+				? dateValue.toISOString()
+				: String(dateValue);
+	});
 	const primaryValues = primaryData.map((d) => d[primaryField] as number);
 	const secondaryValues = secondaryData.map((d) => d[secondaryField] as number);
 

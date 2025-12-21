@@ -4,11 +4,7 @@ import { ComboChart, DualAxisChart, MultiGridChart } from "@/components/charts";
 import type { LayoutOption } from "@/components/controls";
 import { ControlBar } from "@/components/controls";
 import { StatsList } from "@/components/ui";
-import {
-	generateSalesData,
-	generateScatterData,
-	randomSeed,
-} from "@/lib/sampleDataGenerator";
+import { generateSalesData, randomSeed } from "@/lib/sampleDataGenerator";
 import { ThemeProvider, useAppTheme } from "@/providers/ThemeProvider";
 
 export const Route = createFileRoute("/examples/performance")({
@@ -43,7 +39,6 @@ function PerformanceContent() {
 	}, [theme, setTheme]);
 
 	const currentLayout = layouts[currentIndex];
-	const _scatterData = generateScatterData(30, 0.6, seed + 5);
 	const cpuData = generateSalesData(12, seed + 1);
 	const memoryData = generateSalesData(12, seed + 2);
 	const networkData = generateSalesData(12, seed + 3);
@@ -208,7 +203,7 @@ function PerformanceContent() {
 							<StatsList
 								data={liveStats}
 								title="Live Stats"
-								className="flex-shrink-0"
+								className="shrink-0"
 							/>
 						</div>
 					</>
@@ -253,7 +248,7 @@ function PerformanceContent() {
 							<StatsList
 								data={liveStats}
 								title="Historical Avg"
-								className="flex-shrink-0"
+								className="shrink-0"
 							/>
 						</div>
 					</>
