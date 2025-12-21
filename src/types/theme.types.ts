@@ -1,15 +1,12 @@
 // Theme type definitions for RSuite + ECharts integration
 
 export type AppTheme = 'light' | 'dark' | 'high-contrast';
-export type ThemeSource = 'system' | 'manual';
 export type EChartsTheme = 'default' | 'dark';
 
 export interface ThemeContextValue {
   theme: AppTheme;
-  themeSource: ThemeSource;
   echartsTheme: EChartsTheme;
   setTheme: (theme: AppTheme) => void;
-  setThemeSource: (source: ThemeSource) => void;
   registerChart: (id: string, instance: EChartsInstance) => void;
   unregisterChart: (id: string) => void;
 }

@@ -12,7 +12,6 @@ import {
 import { CustomProvider } from 'rsuite';
 import type {
   AppTheme,
-  ThemeSource,
   ThemeContextValue,
   EChartsInstance,
 } from '@/types/theme.types';
@@ -21,42 +20,37 @@ import { mapToEChartsTheme } from '@/types/theme.types';
 // Context with default values
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
+// Detect system theme preference
+function getSystemTheme(): AppTheme {
+  if (typeof window === 'undefined') return 'light';
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
 interface ThemeProviderProps {
   children: ReactNode;
   defaultTheme?: AppTheme;
-  defaultThemeSource?: ThemeSource;
 }
 
 export function ThemeProvider({
   children,
-  defaultTheme = 'light',
-  defaultThemeSource = 'system',
+  defaultTheme,
 }: ThemeProviderProps) {
-  const [themeSource, setThemeSource] = useState<ThemeSource>(defaultThemeSource);
-  const [manualTheme, setManualTheme] = useState<AppTheme>(defaultTheme);
-  const [systemTheme, setSystemTheme] = useState<AppTheme>('light');
+  // Initialize with system theme if no default provided
+  const [theme, setThemeState] = useState<AppTheme>(() => defaultTheme ?? getSystemTheme());
   const [chartInstances] = useState(() => new Map<string, EChartsInstance>());
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  // Detect system theme preference
+  // On client-side mount, detect system theme if not already set
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (!isInitialized && !defaultTheme) {
+      const systemTheme = getSystemTheme();
+      setThemeState(systemTheme);
+      setIsInitialized(true);
+    } else {
+      setIsInitialized(true);
+    }
+  }, [defaultTheme, isInitialized]);
 
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-    const handleChange = (e: MediaQueryListEvent | MediaQueryList) => {
-      setSystemTheme(e.matches ? 'dark' : 'light');
-    };
-
-    // Initial detection
-    handleChange(mediaQuery);
-
-    // Listen for changes
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, []);
-
-  // Compute active theme
-  const theme = themeSource === 'system' ? systemTheme : manualTheme;
   const echartsTheme = mapToEChartsTheme(theme);
 
   // Sync ECharts instances when theme changes
@@ -90,22 +84,19 @@ export function ThemeProvider({
 
   // Set theme handler
   const setTheme = useCallback((newTheme: AppTheme) => {
-    setManualTheme(newTheme);
-    setThemeSource('manual');
+    setThemeState(newTheme);
   }, []);
 
   // Context value
   const contextValue = useMemo<ThemeContextValue>(
     () => ({
       theme,
-      themeSource,
       echartsTheme,
       setTheme,
-      setThemeSource,
       registerChart,
       unregisterChart,
     }),
-    [theme, themeSource, echartsTheme, setTheme, registerChart, unregisterChart]
+    [theme, echartsTheme, setTheme, registerChart, unregisterChart]
   );
 
   return (
