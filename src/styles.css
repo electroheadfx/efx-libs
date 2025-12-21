@@ -1,5 +1,35 @@
+/* RSuite base styles (must be before Tailwind) */
+@import 'rsuite/dist/rsuite.css';
+
+/* Tailwind CSS */
 @import "tailwindcss";
 
+/* Custom utilities bridging RSuite CSS variables */
+@layer utilities {
+  /* Background utilities using RSuite variables */
+  .bg-rs-body { background-color: var(--rs-body); }
+  .bg-rs-card { background-color: var(--rs-bg-card); }
+  .bg-rs-overlay { background-color: var(--rs-bg-overlay); }
+  .bg-rs-well { background-color: var(--rs-bg-well); }
+  
+  /* Text utilities using RSuite variables */
+  .text-rs-primary { color: var(--rs-text-primary); }
+  .text-rs-secondary { color: var(--rs-text-secondary); }
+  .text-rs-tertiary { color: var(--rs-text-tertiary); }
+  .text-rs-heading { color: var(--rs-text-heading); }
+  .text-rs-link { color: var(--rs-text-link); }
+  
+  /* Border utilities using RSuite variables */
+  .border-rs-primary { border-color: var(--rs-border-primary); }
+  .border-rs-secondary { border-color: var(--rs-border-secondary); }
+  
+  /* Shadow utilities using RSuite variables */
+  .shadow-rs-sm { box-shadow: var(--rs-shadow-sm); }
+  .shadow-rs-md { box-shadow: var(--rs-shadow-md); }
+  .shadow-rs-lg { box-shadow: var(--rs-shadow-lg); }
+}
+
+/* Base body styles */
 body {
   @apply m-0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -7,9 +37,31 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--rs-body);
+  color: var(--rs-text-primary);
+  min-height: 100vh;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+/* Responsive grid column override */
+@media (max-width: 639px) {
+  .grid[style*="--grid-cols"] {
+    grid-template-columns: repeat(var(--grid-cols-sm, 1), minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .grid[style*="--grid-cols"] {
+    grid-template-columns: repeat(var(--grid-cols-md, 2), minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid[style*="--grid-cols"] {
+    grid-template-columns: repeat(var(--grid-cols-lg, 3), minmax(0, 1fr));
+  }
 }

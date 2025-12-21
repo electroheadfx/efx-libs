@@ -18,6 +18,34 @@ const config = defineConfig({
     tanstackStart(),
     viteReact(),
   ],
+  build: {
+    // ECharts is a large library, adjust warning limit
+    chunkSizeWarningLimit: 1200,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          // Only split for client bundles (not SSR)
+          if (id.includes('node_modules')) {
+            // ECharts and related
+            if (id.includes('echarts')) {
+              if (id.includes('@echarts-x')) {
+                return 'echarts-custom'
+              }
+              return 'vendor-echarts'
+            }
+            // RSuite
+            if (id.includes('rsuite')) {
+              return 'vendor-rsuite'
+            }
+            // TanStack
+            if (id.includes('@tanstack')) {
+              return 'vendor-tanstack'
+            }
+          }
+        },
+      },
+    },
+  },
 })
 
 export default config
