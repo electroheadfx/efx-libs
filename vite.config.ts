@@ -37,10 +37,6 @@ const config = defineConfig({
             if (id.includes('rsuite')) {
               return 'vendor-rsuite'
             }
-            // TanStack
-            if (id.includes('@tanstack')) {
-              return 'vendor-tanstack'
-            }
           }
         },
       },

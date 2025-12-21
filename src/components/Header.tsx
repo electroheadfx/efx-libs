@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 
 import { useState } from 'react'
-import { Home, Menu, X } from 'lucide-react'
+import { Home, Menu, X, TrendingUp, BarChart3, LineChart, PieChart, Settings } from 'lucide-react'
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false)
@@ -60,7 +60,72 @@ export default function Header() {
             <span className="font-medium">Home</span>
           </Link>
 
+          <div className="mt-4 mb-2 px-3 text-xs text-gray-400 uppercase tracking-wider">Dashboards</div>
 
+          <Link
+            to="/examples/sales-analytics"
+            onClick={() => setIsOpen(false)}
+            className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
+            activeProps={{
+              className:
+                'flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2',
+            }}
+          >
+            <TrendingUp size={20} />
+            <span className="font-medium">Sales Analytics</span>
+          </Link>
+
+          <Link
+            to="/examples/performance"
+            onClick={() => setIsOpen(false)}
+            className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
+            activeProps={{
+              className:
+                'flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2',
+            }}
+          >
+            <BarChart3 size={20} />
+            <span className="font-medium">Performance Metrics</span>
+          </Link>
+
+          <Link
+            to="/examples/financial"
+            onClick={() => setIsOpen(false)}
+            className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
+            activeProps={{
+              className:
+                'flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2',
+            }}
+          >
+            <LineChart size={20} />
+            <span className="font-medium">Financial Reports</span>
+          </Link>
+
+          <Link
+            to="/examples/marketing"
+            onClick={() => setIsOpen(false)}
+            className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
+            activeProps={{
+              className:
+                'flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2',
+            }}
+          >
+            <PieChart size={20} />
+            <span className="font-medium">Marketing Dashboard</span>
+          </Link>
+
+          <Link
+            to="/examples/operations"
+            onClick={() => setIsOpen(false)}
+            className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
+            activeProps={{
+              className:
+                'flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2',
+            }}
+          >
+            <Settings size={20} />
+            <span className="font-medium">Operations Center</span>
+          </Link>
         </nav>
       </aside>
     </>

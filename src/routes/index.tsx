@@ -1,152 +1,176 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { createServerFn } from '@tanstack/react-start';
+import { createFileRoute, Link } from '@tanstack/react-router';
 import { ThemeProvider } from '@/providers/ThemeProvider';
-import { DashboardLayout, LayoutItem } from '@/components/layout/DashboardLayout';
-import { LineChart, BarChart, PieChart } from '@/components/charts';
-import { KPICard } from '@/components/ui/KPICard';
-import { StatsList } from '@/components/ui/StatsList';
-import { ThemeControlPanel } from '@/components/controls/ThemeControlPanel';
-import { registerCustomSeries } from '@/lib/customSeries';
-import { salesData, categoryData, marketShareData } from '@/data';
+import { Panel, Text } from 'rsuite';
+import { BarChart3, LineChart, PieChart, TrendingUp, Settings } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import { ThemeControlPanel } from '@/components/controls';
 
-// Server function to fetch dashboard data
-const fetchDashboardData = createServerFn({ method: 'GET' }).handler(async () => {
-  // Simulate server-side data fetching
-  // In production, this would fetch from database/API
-  return {
-    kpis: {
-      revenue: { value: '$1.2M', change: '+12.5%', changeType: 'positive' as const },
-      users: { value: '45,231', change: '+8.3%', changeType: 'positive' as const },
-      orders: { value: '1,234', change: '-3.2%', changeType: 'negative' as const },
-      conversion: { value: '3.2%', change: '+0.5%', changeType: 'positive' as const },
-    },
-    salesData,
-    categoryData,
-    marketShareData,
-    stats: [
-      { label: 'Active Sessions', value: '1,234', change: '+5%' },
-      { label: 'Bounce Rate', value: '32.5%', change: '-2%' },
-      { label: 'Avg. Session', value: '4m 32s', change: '+12s' },
-      { label: 'Page Views', value: '45.2K', change: '+8%' },
-    ],
-    lastUpdated: new Date().toISOString(),
-  };
-});
-
-// Route with SSR loader
 export const Route = createFileRoute('/')({
-  loader: async () => {
-    // Register custom series on server (for SSR)
-    registerCustomSeries();
-    
-    // Fetch data on server
-    const data = await fetchDashboardData();
-    return data;
-  },
-  component: Dashboard,
+  component: NavigationHub,
 });
 
-function Dashboard() {
-  const data = Route.useLoaderData();
+interface PageCard {
+  to: string;
+  title: string;
+  description: string;
+  icon: LucideIcon;
+  features: string[];
+  layouts: number;
+}
 
-  // Dashboard layout template
-  const dashboardTemplate = {
-    areas: `
-      "kpi1 kpi2 kpi3 kpi4"
-      "main main main sidebar"
-      "main main main sidebar"
-      "chart1 chart1 chart2 chart2"
-    `,
-    columns: ['1fr', '1fr', '1fr', '300px'],
-    rows: ['100px', '1fr', '1fr', '350px'],
-    gap: 16,
-    padding: { top: 0, right: 0, bottom: 24, left: 0 },
-  };
+const pages: PageCard[] = [
+  {
+    to: '/examples/sales-analytics',
+    title: 'Sales Analytics',
+    description: 'E-commerce sales performance dashboards with revenue trends, category analysis, and market insights.',
+    icon: TrendingUp,
+    features: ['Line charts', 'Bar charts', 'Pie charts', 'Scatter plots', 'KPI cards'],
+    layouts: 3,
+  },
+  {
+    to: '/examples/performance',
+    title: 'Performance Metrics',
+    description: 'System and application monitoring with real-time metrics, resource allocation, and load analysis.',
+    icon: BarChart3,
+    features: ['Multi-line trends', 'Resource bars', 'Scatter distribution', 'Comparison views'],
+    layouts: 3,
+  },
+  {
+    to: '/examples/financial',
+    title: 'Financial Reports',
+    description: 'Comprehensive financial data visualization with revenue, expenses, and profit margin analysis.',
+    icon: LineChart,
+    features: ['Area charts', 'Budget allocation', 'Risk analysis', 'Financial KPIs'],
+    layouts: 3,
+  },
+  {
+    to: '/examples/marketing',
+    title: 'Marketing Dashboard',
+    description: 'Campaign analytics with engagement metrics, audience demographics, and conversion funnels.',
+    icon: PieChart,
+    features: ['Demographics pie', 'Channel performance', 'ROI scatter', 'Funnel analysis'],
+    layouts: 3,
+  },
+  {
+    to: '/examples/operations',
+    title: 'Operations Center',
+    description: 'Operational monitoring with throughput tracking, alert patterns, and anomaly detection.',
+    icon: Settings,
+    features: ['Live monitoring', 'Alert patterns', 'Resource status', 'Anomaly detection'],
+    layouts: 3,
+  },
+];
 
+function NavigationCard({ page }: { page: PageCard }) {
+  const Icon = page.icon;
+  
+  return (
+    <Link to={page.to} className="block group">
+      <Panel 
+        bordered 
+        className="h-full bg-rs-bg-card hover:bg-rs-bg-active transition-colors cursor-pointer"
+      >
+        <div className="flex items-start gap-4">
+          <div className="p-3 rounded-lg bg-rs-primary/10 text-rs-primary group-hover:bg-rs-primary group-hover:text-white transition-colors">
+            <Icon size={24} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between mb-1">
+              <Text weight="semibold" className="text-lg text-rs-heading">
+                {page.title}
+              </Text>
+              <span className="text-xs px-2 py-1 rounded bg-rs-bg-subtle text-rs-secondary">
+                {page.layouts} layouts
+              </span>
+            </div>
+            <Text className="text-rs-secondary text-sm mb-3">
+              {page.description}
+            </Text>
+            <div className="flex flex-wrap gap-1.5">
+              {page.features.map((feature) => (
+                <span
+                  key={feature}
+                  className="text-xs px-2 py-0.5 rounded-full bg-rs-primary/10 text-rs-primary"
+                >
+                  {feature}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Panel>
+    </Link>
+  );
+}
+
+function NavigationHub() {
   return (
     <ThemeProvider>
-      <div className="h-[calc(100vh-72px)] p-4 pb-0 bg-rs-body overflow-hidden">
-        <header className="mb-4 pb-2">
-          <h1 className="text-2xl font-bold text-rs-heading">Analytics Dashboard</h1>
-          <p className="text-rs-secondary text-sm">
-            Last updated: {new Date(data.lastUpdated).toLocaleString()}
-          </p>
-        </header>
+      <div className="min-h-[calc(100vh-72px)] p-6 bg-rs-body">
+        <div className="max-w-6xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <Text weight="bold" className="text-3xl text-rs-heading mb-2 block">
+              Dashboard Examples
+            </Text>
+            <Text className="text-rs-secondary text-lg">
+              Explore mixed chart dashboards with responsive layouts, KPI cards, and diverse visualizations
+            </Text>
+          </div>
 
-        <DashboardLayout 
-          template={dashboardTemplate} 
-          fillViewport 
-          viewportOffset="172px"
-        >
-          {/* KPI Cards */}
-          <LayoutItem area="kpi1">
-            <KPICard
-              title="Revenue"
-              value={data.kpis.revenue.value}
-              change={data.kpis.revenue.change}
-              changeType={data.kpis.revenue.changeType}
-            />
-          </LayoutItem>
-          <LayoutItem area="kpi2">
-            <KPICard
-              title="Users"
-              value={data.kpis.users.value}
-              change={data.kpis.users.change}
-              changeType={data.kpis.users.changeType}
-            />
-          </LayoutItem>
-          <LayoutItem area="kpi3">
-            <KPICard
-              title="Orders"
-              value={data.kpis.orders.value}
-              change={data.kpis.orders.change}
-              changeType={data.kpis.orders.changeType}
-            />
-          </LayoutItem>
-          <LayoutItem area="kpi4">
-            <KPICard
-              title="Conversion"
-              value={data.kpis.conversion.value}
-              change={data.kpis.conversion.change}
-              changeType={data.kpis.conversion.changeType}
-            />
-          </LayoutItem>
-
-          {/* Main chart area */}
-          <LayoutItem area="main" className="bg-rs-card rounded-lg shadow-rs-md p-4">
-            <h2 className="text-lg font-semibold text-rs-heading mb-4">Revenue Trend</h2>
-            <div className="h-[calc(100%-40px)]">
-              <LineChart
-                data={data.salesData}
-                xField="date"
-                yField="value"
-                smooth
-                areaStyle
-              />
+          {/* Feature highlights */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div className="text-center p-4 bg-rs-bg-card rounded-lg border border-rs-border">
+              <div className="text-2xl font-bold text-rs-primary">5</div>
+              <div className="text-sm text-rs-secondary">Dashboard Pages</div>
             </div>
-          </LayoutItem>
+            <div className="text-center p-4 bg-rs-bg-card rounded-lg border border-rs-border">
+              <div className="text-2xl font-bold text-rs-primary">15</div>
+              <div className="text-sm text-rs-secondary">Layout Variations</div>
+            </div>
+            <div className="text-center p-4 bg-rs-bg-card rounded-lg border border-rs-border">
+              <div className="text-2xl font-bold text-rs-primary">5+</div>
+              <div className="text-sm text-rs-secondary">Chart Types</div>
+            </div>
+            <div className="text-center p-4 bg-rs-bg-card rounded-lg border border-rs-border">
+              <div className="text-2xl font-bold text-rs-primary">∞</div>
+              <div className="text-sm text-rs-secondary">Random Data</div>
+            </div>
+          </div>
 
-          {/* Sidebar with theme control and stats */}
-          <LayoutItem area="sidebar" className="flex flex-col gap-4">
+          {/* Theme controls */}
+          <div className="mb-8 flex justify-center">
             <ThemeControlPanel />
-            <StatsList data={data.stats} title="Quick Stats" className="flex-1" />
-          </LayoutItem>
+          </div>
 
-          {/* Bottom charts */}
-          <LayoutItem area="chart1" className="bg-rs-card rounded-lg shadow-rs-md p-4">
-            <h2 className="text-lg font-semibold text-rs-heading mb-4">Sales by Category</h2>
-            <div className="h-[calc(100%-40px)]">
-              <BarChart data={data.categoryData} />
-            </div>
-          </LayoutItem>
+          {/* Page cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {pages.map((page) => (
+              <NavigationCard key={page.to} page={page} />
+            ))}
+          </div>
 
-          <LayoutItem area="chart2" className="bg-rs-card rounded-lg shadow-rs-md p-4">
-            <h2 className="text-lg font-semibold text-rs-heading mb-4">Market Share</h2>
-            <div className="h-[calc(100%-40px)]">
-              <PieChart data={data.marketShareData} donut />
-            </div>
-          </LayoutItem>
-        </DashboardLayout>
+          {/* Instructions */}
+          <div className="mt-8 text-center">
+            <Panel bordered className="inline-block bg-rs-bg-card">
+              <div className="flex items-center gap-6 text-sm text-rs-secondary">
+                <div className="flex items-center gap-2">
+                  <kbd className="px-2 py-1 bg-rs-bg-subtle rounded text-xs">←</kbd>
+                  <kbd className="px-2 py-1 bg-rs-bg-subtle rounded text-xs">→</kbd>
+                  <span>Navigate layouts</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-1 bg-rs-primary/10 text-rs-primary rounded text-xs">🎲</span>
+                  <span>Randomize data</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-1 bg-rs-bg-subtle rounded text-xs">◐</span>
+                  <span>Toggle theme</span>
+                </div>
+              </div>
+            </Panel>
+          </div>
+        </div>
       </div>
     </ThemeProvider>
   );

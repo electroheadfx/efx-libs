@@ -10,33 +10,102 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ExamplesSalesAnalyticsRouteImport } from './routes/examples/sales-analytics'
+import { Route as ExamplesPerformanceRouteImport } from './routes/examples/performance'
+import { Route as ExamplesOperationsRouteImport } from './routes/examples/operations'
+import { Route as ExamplesMarketingRouteImport } from './routes/examples/marketing'
+import { Route as ExamplesFinancialRouteImport } from './routes/examples/financial'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ExamplesSalesAnalyticsRoute = ExamplesSalesAnalyticsRouteImport.update({
+  id: '/examples/sales-analytics',
+  path: '/examples/sales-analytics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExamplesPerformanceRoute = ExamplesPerformanceRouteImport.update({
+  id: '/examples/performance',
+  path: '/examples/performance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExamplesOperationsRoute = ExamplesOperationsRouteImport.update({
+  id: '/examples/operations',
+  path: '/examples/operations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExamplesMarketingRoute = ExamplesMarketingRouteImport.update({
+  id: '/examples/marketing',
+  path: '/examples/marketing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExamplesFinancialRoute = ExamplesFinancialRouteImport.update({
+  id: '/examples/financial',
+  path: '/examples/financial',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/examples/financial': typeof ExamplesFinancialRoute
+  '/examples/marketing': typeof ExamplesMarketingRoute
+  '/examples/operations': typeof ExamplesOperationsRoute
+  '/examples/performance': typeof ExamplesPerformanceRoute
+  '/examples/sales-analytics': typeof ExamplesSalesAnalyticsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/examples/financial': typeof ExamplesFinancialRoute
+  '/examples/marketing': typeof ExamplesMarketingRoute
+  '/examples/operations': typeof ExamplesOperationsRoute
+  '/examples/performance': typeof ExamplesPerformanceRoute
+  '/examples/sales-analytics': typeof ExamplesSalesAnalyticsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/examples/financial': typeof ExamplesFinancialRoute
+  '/examples/marketing': typeof ExamplesMarketingRoute
+  '/examples/operations': typeof ExamplesOperationsRoute
+  '/examples/performance': typeof ExamplesPerformanceRoute
+  '/examples/sales-analytics': typeof ExamplesSalesAnalyticsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/examples/financial'
+    | '/examples/marketing'
+    | '/examples/operations'
+    | '/examples/performance'
+    | '/examples/sales-analytics'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/examples/financial'
+    | '/examples/marketing'
+    | '/examples/operations'
+    | '/examples/performance'
+    | '/examples/sales-analytics'
+  id:
+    | '__root__'
+    | '/'
+    | '/examples/financial'
+    | '/examples/marketing'
+    | '/examples/operations'
+    | '/examples/performance'
+    | '/examples/sales-analytics'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ExamplesFinancialRoute: typeof ExamplesFinancialRoute
+  ExamplesMarketingRoute: typeof ExamplesMarketingRoute
+  ExamplesOperationsRoute: typeof ExamplesOperationsRoute
+  ExamplesPerformanceRoute: typeof ExamplesPerformanceRoute
+  ExamplesSalesAnalyticsRoute: typeof ExamplesSalesAnalyticsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +117,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/examples/sales-analytics': {
+      id: '/examples/sales-analytics'
+      path: '/examples/sales-analytics'
+      fullPath: '/examples/sales-analytics'
+      preLoaderRoute: typeof ExamplesSalesAnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/examples/performance': {
+      id: '/examples/performance'
+      path: '/examples/performance'
+      fullPath: '/examples/performance'
+      preLoaderRoute: typeof ExamplesPerformanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/examples/operations': {
+      id: '/examples/operations'
+      path: '/examples/operations'
+      fullPath: '/examples/operations'
+      preLoaderRoute: typeof ExamplesOperationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/examples/marketing': {
+      id: '/examples/marketing'
+      path: '/examples/marketing'
+      fullPath: '/examples/marketing'
+      preLoaderRoute: typeof ExamplesMarketingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/examples/financial': {
+      id: '/examples/financial'
+      path: '/examples/financial'
+      fullPath: '/examples/financial'
+      preLoaderRoute: typeof ExamplesFinancialRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ExamplesFinancialRoute: ExamplesFinancialRoute,
+  ExamplesMarketingRoute: ExamplesMarketingRoute,
+  ExamplesOperationsRoute: ExamplesOperationsRoute,
+  ExamplesPerformanceRoute: ExamplesPerformanceRoute,
+  ExamplesSalesAnalyticsRoute: ExamplesSalesAnalyticsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
