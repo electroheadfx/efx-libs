@@ -1,279 +1,255 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { useState, useCallback } from 'react';
-import { ThemeProvider } from '@/providers/ThemeProvider';
-import { LayoutNavigator, ThemeControlPanel, RandomDataButton } from '@/components/controls';
-import type { LayoutOption } from '@/components/controls';
-import { LineChart, BarChart, PieChart, ScatterChart } from '@/components/charts';
-import { ResponsiveDashboardLayout, LayoutItem } from '@/components/layout/ResponsiveDashboardLayout';
-import type { ResponsiveTemplates } from '@/components/layout/ResponsiveDashboardLayout';
-import { KPICard, StatsList } from '@/components/ui';
-import { generateDashboardData, generateScatterData, randomSeed } from '@/lib/sampleDataGenerator';
+import { createFileRoute } from "@tanstack/react-router";
+import { useCallback, useState } from "react";
+import { ComboChart, DualAxisChart, MultiGridChart } from "@/components/charts";
+import type { LayoutOption } from "@/components/controls";
+import { ControlBar } from "@/components/controls";
+import { StatsList } from "@/components/ui";
+import {
+	generateDashboardData,
+	generateSalesData,
+	randomSeed,
+} from "@/lib/sampleDataGenerator";
+import { ThemeProvider, useAppTheme } from "@/providers/ThemeProvider";
 
-export const Route = createFileRoute('/examples/sales-analytics')({
-  component: SalesAnalyticsPage,
+export const Route = createFileRoute("/examples/sales-analytics")({
+	component: SalesAnalyticsPage,
 });
 
 const layouts: LayoutOption[] = [
-  { id: 'overview', name: 'Overview', description: 'Complete sales overview' },
-  { id: 'detailed', name: 'Detailed Analysis', description: 'Deep dive analytics' },
-  { id: 'executive', name: 'Executive Summary', description: 'High-level metrics' },
+	{
+		id: "matrix",
+		name: "Matrix",
+		description: "4-in-1 + sidebar charts",
+	},
+	{
+		id: "detailed",
+		name: "Detailed",
+		description: "Combo: Line + Bar + Scatter",
+	},
+	{ id: "executive", name: "Executive", description: "Dual axis comparison" },
 ];
 
-// Template configurations for each layout
-const layoutTemplates: Record<string, ResponsiveTemplates> = {
-  overview: {
-    desktop: {
-      areas: `
-        "nav kpi1 kpi2 kpi3 kpi4"
-        "main main main side side"
-        "main main main side side"
-        "chart1 chart1 chart2 chart2 chart2"
-      `,
-      columns: ['180px', '1fr', '1fr', '1fr', '1fr'],
-      rows: ['80px', '1fr', '1fr', '280px'],
-      gap: 12,
-    },
-    mobile: {
-      areas: `
-        "nav"
-        "kpi1"
-        "kpi2"
-        "kpi3"
-        "kpi4"
-        "main"
-        "side"
-        "chart1"
-        "chart2"
-      `,
-      columns: ['1fr'],
-      rows: ['60px', '80px', '80px', '80px', '80px', '300px', '200px', '250px', '250px'],
-      gap: 12,
-    },
-  },
-  detailed: {
-    desktop: {
-      areas: `
-        "nav kpi1 kpi2 kpi3 kpi4"
-        "main main scatter scatter scatter"
-        "main main scatter scatter scatter"
-        "bar bar pie stats stats"
-      `,
-      columns: ['180px', '1fr', '1fr', '1fr', '1fr'],
-      rows: ['80px', '1fr', '1fr', '280px'],
-      gap: 12,
-    },
-    mobile: {
-      areas: `
-        "nav"
-        "kpi1"
-        "kpi2"
-        "kpi3"
-        "kpi4"
-        "main"
-        "scatter"
-        "bar"
-        "pie"
-        "stats"
-      `,
-      columns: ['1fr'],
-      rows: ['60px', '80px', '80px', '80px', '80px', '280px', '280px', '250px', '250px', '200px'],
-      gap: 12,
-    },
-  },
-  executive: {
-    desktop: {
-      areas: `
-        "nav kpi1 kpi1 kpi2 kpi2"
-        "nav kpi3 kpi3 kpi4 kpi4"
-        "main main main side side"
-        "main main main side side"
-        "chart1 chart1 chart1 chart1 chart1"
-      `,
-      columns: ['180px', '1fr', '1fr', '1fr', '1fr'],
-      rows: ['70px', '70px', '1fr', '1fr', '200px'],
-      gap: 12,
-    },
-    mobile: {
-      areas: `
-        "nav"
-        "kpi1"
-        "kpi2"
-        "kpi3"
-        "kpi4"
-        "main"
-        "side"
-        "chart1"
-      `,
-      columns: ['1fr'],
-      rows: ['60px', '90px', '90px', '90px', '90px', '300px', '200px', '250px'],
-      gap: 12,
-    },
-  },
-};
+function SalesAnalyticsContent() {
+	const [currentIndex, setCurrentIndex] = useState(0);
+	const [seed, setSeed] = useState(() => randomSeed());
+	const { theme, setTheme } = useAppTheme();
+
+	const handleRandomize = useCallback(() => {
+		setSeed(randomSeed());
+	}, []);
+
+	const handleThemeToggle = useCallback(() => {
+		setTheme(theme === "dark" ? "light" : "dark");
+	}, [theme, setTheme]);
+
+	const currentLayout = layouts[currentIndex];
+	const data = generateDashboardData(seed);
+	const revenueData = generateSalesData(12, seed + 1);
+	const ordersData = generateSalesData(12, seed + 2);
+	const profitData = generateSalesData(12, seed + 3);
+
+	// Convert KPI data for ControlBar
+	const kpis = [
+		{
+			title: "Revenue",
+			value: data.kpis.revenue.value,
+			change: data.kpis.revenue.change,
+			changeType: data.kpis.revenue.changeType,
+		},
+		{
+			title: "Orders",
+			value: data.kpis.orders.value,
+			change: data.kpis.orders.change,
+			changeType: data.kpis.orders.changeType,
+		},
+		{
+			title: "Customers",
+			value: data.kpis.users.value,
+			change: data.kpis.users.change,
+			changeType: data.kpis.users.changeType,
+		},
+		{
+			title: "Conversion",
+			value: data.kpis.conversion.value,
+			change: data.kpis.conversion.change,
+			changeType: data.kpis.conversion.changeType,
+		},
+	];
+
+	return (
+		<div className="h-[calc(100vh-72px)] flex flex-col p-3 gap-3 bg-rs-body overflow-hidden">
+			{/* Control Bar - Always at top */}
+			<ControlBar
+				layouts={layouts}
+				currentLayoutIndex={currentIndex}
+				onLayoutChange={setCurrentIndex}
+				kpis={kpis}
+				onThemeToggle={handleThemeToggle}
+				isDark={theme === "dark"}
+				onRandomize={handleRandomize}
+			/>
+
+			{/* Main Content Area */}
+			<div
+				className="flex-1 grid gap-3 min-h-0 overflow-hidden"
+				style={{
+					gridTemplateColumns: "2fr 1fr",
+					gridTemplateRows: "1fr",
+				}}
+			>
+				{/* Matrix Layout - MultiGridChart (4 in 1) + Sidebar with other charts */}
+				{currentLayout.id === "matrix" && (
+					<>
+						<div className="bg-rs-card rounded-lg shadow-rs-md p-3 overflow-hidden">
+							<h3 className="text-sm font-semibold text-rs-heading mb-2">
+								Sales Dashboard (4 Charts in Single ECharts Instance)
+							</h3>
+							<div className="h-[calc(100%-28px)]">
+								<MultiGridChart
+									lineData={revenueData}
+									areaData={ordersData}
+									barData={data.categoryData}
+									hBarData={data.categoryData.slice().reverse()}
+								/>
+							</div>
+						</div>
+
+						<div className="flex flex-col gap-3 overflow-hidden">
+							<div className="flex-1 bg-rs-card rounded-lg shadow-rs-md p-3 min-h-0">
+								<h3 className="text-sm font-semibold text-rs-heading mb-2">
+									Revenue vs Growth (Dual Axis)
+								</h3>
+								<div className="h-[calc(100%-28px)]">
+									<DualAxisChart
+										primaryData={revenueData}
+										secondaryData={profitData.map((d, i) => ({
+											...d,
+											value: ((seed + i) % 20) + 5,
+										}))}
+										primaryName="Revenue"
+										secondaryName="Growth %"
+										primaryUnit="K"
+										secondaryUnit="%"
+									/>
+								</div>
+							</div>
+							<div className="flex-1 bg-rs-card rounded-lg shadow-rs-md p-3 min-h-0">
+								<h3 className="text-sm font-semibold text-rs-heading mb-2">
+									Orders Trend (Combo)
+								</h3>
+								<div className="h-[calc(100%-28px)]">
+									<ComboChart
+										lineData={ordersData}
+										barData={profitData}
+										lineName="Orders"
+										barName="Profit"
+									/>
+								</div>
+							</div>
+						</div>
+					</>
+				)}
+
+				{/* Detailed Layout - ComboChart */}
+				{currentLayout.id === "detailed" && (
+					<>
+						<div className="bg-rs-card rounded-lg shadow-rs-md p-3 overflow-hidden">
+							<h3 className="text-sm font-semibold text-rs-heading mb-2">
+								Revenue vs Orders (Line + Bar in Single Chart)
+							</h3>
+							<div className="h-[calc(100%-28px)]">
+								<ComboChart
+									lineData={revenueData}
+									barData={ordersData}
+									scatterData={profitData}
+									lineName="Revenue Trend"
+									barName="Order Volume"
+									scatterName="Profit Points"
+								/>
+							</div>
+						</div>
+
+						<div className="flex flex-col gap-3 overflow-hidden">
+							<div className="flex-1 bg-rs-card rounded-lg shadow-rs-md p-3 min-h-0">
+								<h3 className="text-sm font-semibold text-rs-heading mb-2">
+									Margin Analysis (Dual Axis)
+								</h3>
+								<div className="h-[calc(100%-28px)]">
+									<DualAxisChart
+										primaryData={revenueData}
+										secondaryData={profitData.map((d, i) => ({
+											...d,
+											value: ((seed + i) % 25) + 15,
+										}))}
+										primaryName="Revenue"
+										secondaryName="Margin %"
+										primaryUnit="K"
+										secondaryUnit="%"
+									/>
+								</div>
+							</div>
+							<StatsList
+								data={data.stats}
+								title="Key Metrics"
+								className="flex-shrink-0"
+							/>
+						</div>
+					</>
+				)}
+
+				{/* Executive Layout - Dual Axis focus */}
+				{currentLayout.id === "executive" && (
+					<>
+						<div className="bg-rs-card rounded-lg shadow-rs-md p-3 overflow-hidden">
+							<h3 className="text-sm font-semibold text-rs-heading mb-2">
+								Executive Summary (Revenue + Growth Rate)
+							</h3>
+							<div className="h-[calc(100%-28px)]">
+								<DualAxisChart
+									primaryData={revenueData}
+									secondaryData={ordersData.map((d, i) => ({
+										...d,
+										value: (i + 1) * 2 + (seed % 5),
+									}))}
+									primaryName="Revenue"
+									secondaryName="Growth %"
+									primaryUnit="M"
+									secondaryUnit="%"
+								/>
+							</div>
+						</div>
+
+						<div className="flex flex-col gap-3 overflow-hidden">
+							<div className="flex-1 bg-rs-card rounded-lg shadow-rs-md p-3 min-h-0">
+								<h3 className="text-sm font-semibold text-rs-heading mb-2">
+									Category Performance (Combo)
+								</h3>
+								<div className="h-[calc(100%-28px)]">
+									<ComboChart
+										lineData={profitData}
+										barData={ordersData}
+										lineName="Profit"
+										barName="Orders"
+									/>
+								</div>
+							</div>
+							<StatsList
+								data={data.stats}
+								title="Executive KPIs"
+								className="flex-shrink-0"
+							/>
+						</div>
+					</>
+				)}
+			</div>
+		</div>
+	);
+}
 
 function SalesAnalyticsPage() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [seed, setSeed] = useState(() => randomSeed());
-  
-  const handleRandomize = useCallback(() => {
-    setSeed(randomSeed());
-  }, []);
-
-  const currentLayout = layouts[currentIndex];
-  const data = generateDashboardData(seed);
-  const scatterData = generateScatterData(40, 0.75, seed + 10);
-  const template = layoutTemplates[currentLayout.id];
-
-  return (
-    <ThemeProvider>
-      <div className="min-h-[calc(100vh-72px)] p-4 bg-rs-body overflow-auto">
-        <ResponsiveDashboardLayout
-          templates={template}
-          fillViewport
-          viewportOffset={{ desktop: '104px', mobile: '88px' }}
-        >
-          {/* Navigation */}
-          <LayoutItem area="nav">
-            <LayoutNavigator
-              layouts={layouts}
-              currentIndex={currentIndex}
-              onNavigate={setCurrentIndex}
-              compact
-            />
-          </LayoutItem>
-
-          {/* KPI Cards */}
-          <LayoutItem area="kpi1">
-            <KPICard
-              title="Revenue"
-              value={data.kpis.revenue.value}
-              change={data.kpis.revenue.change}
-              changeType={data.kpis.revenue.changeType}
-            />
-          </LayoutItem>
-          <LayoutItem area="kpi2">
-            <KPICard
-              title="Orders"
-              value={data.kpis.orders.value}
-              change={data.kpis.orders.change}
-              changeType={data.kpis.orders.changeType}
-            />
-          </LayoutItem>
-          <LayoutItem area="kpi3">
-            <KPICard
-              title="Customers"
-              value={data.kpis.users.value}
-              change={data.kpis.users.change}
-              changeType={data.kpis.users.changeType}
-            />
-          </LayoutItem>
-          <LayoutItem area="kpi4">
-            <KPICard
-              title="Conversion"
-              value={data.kpis.conversion.value}
-              change={data.kpis.conversion.change}
-              changeType={data.kpis.conversion.changeType}
-            />
-          </LayoutItem>
-
-          {/* Main Line Chart - Always present */}
-          <LayoutItem area="main" className="bg-rs-card rounded-lg shadow-rs-md p-4">
-            <h3 className="text-lg font-semibold text-rs-heading mb-2">Revenue Trend</h3>
-            <div className="h-[calc(100%-32px)]">
-              <LineChart data={data.salesData} smooth areaStyle />
-            </div>
-          </LayoutItem>
-
-          {/* Layout-specific content */}
-          {currentLayout.id === 'overview' && (
-            <>
-              <LayoutItem area="side" className="flex flex-col gap-3">
-                <div className="bg-rs-card rounded-lg shadow-rs-md p-3 flex-1">
-                  <h3 className="text-sm font-semibold text-rs-heading mb-2">Market Share</h3>
-                  <div className="h-[calc(100%-28px)]">
-                    <PieChart data={data.marketShareData} donut />
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <ThemeControlPanel />
-                </div>
-                <RandomDataButton onClick={handleRandomize} />
-              </LayoutItem>
-              <LayoutItem area="chart1" className="bg-rs-card rounded-lg shadow-rs-md p-4">
-                <h3 className="text-sm font-semibold text-rs-heading mb-2">Sales by Category</h3>
-                <div className="h-[calc(100%-28px)]">
-                  <BarChart data={data.categoryData} />
-                </div>
-              </LayoutItem>
-              <LayoutItem area="chart2" className="bg-rs-card rounded-lg shadow-rs-md p-4">
-                <h3 className="text-sm font-semibold text-rs-heading mb-2">Price vs Volume Correlation</h3>
-                <div className="h-[calc(100%-28px)]">
-                  <ScatterChart data={scatterData} />
-                </div>
-              </LayoutItem>
-            </>
-          )}
-
-          {currentLayout.id === 'detailed' && (
-            <>
-              <LayoutItem area="scatter" className="bg-rs-card rounded-lg shadow-rs-md p-4">
-                <h3 className="text-lg font-semibold text-rs-heading mb-2">Price vs Volume Analysis</h3>
-                <div className="h-[calc(100%-32px)]">
-                  <ScatterChart data={scatterData} />
-                </div>
-              </LayoutItem>
-              <LayoutItem area="bar" className="bg-rs-card rounded-lg shadow-rs-md p-4">
-                <h3 className="text-sm font-semibold text-rs-heading mb-2">Category Breakdown</h3>
-                <div className="h-[calc(100%-28px)]">
-                  <BarChart data={data.categoryData} horizontal />
-                </div>
-              </LayoutItem>
-              <LayoutItem area="pie" className="bg-rs-card rounded-lg shadow-rs-md p-4">
-                <h3 className="text-sm font-semibold text-rs-heading mb-2">Distribution</h3>
-                <div className="h-[calc(100%-28px)]">
-                  <PieChart data={data.marketShareData} donut />
-                </div>
-              </LayoutItem>
-              <LayoutItem area="stats" className="flex flex-col gap-2">
-                <ThemeControlPanel />
-                <RandomDataButton onClick={handleRandomize} />
-              </LayoutItem>
-            </>
-          )}
-
-          {currentLayout.id === 'executive' && (
-            <>
-              <LayoutItem area="side" className="flex flex-col gap-3">
-                <StatsList data={data.stats} title="Key Metrics" className="flex-1" />
-                <ThemeControlPanel />
-                <RandomDataButton onClick={handleRandomize} />
-              </LayoutItem>
-              <LayoutItem area="chart1" className="bg-rs-card rounded-lg shadow-rs-md p-4">
-                <div className="flex gap-4 h-full">
-                  <div className="flex-1">
-                    <h3 className="text-sm font-semibold text-rs-heading mb-2">Categories</h3>
-                    <div className="h-[calc(100%-28px)]">
-                      <BarChart data={data.categoryData} />
-                    </div>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-sm font-semibold text-rs-heading mb-2">Market Share</h3>
-                    <div className="h-[calc(100%-28px)]">
-                      <PieChart data={data.marketShareData} donut />
-                    </div>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-sm font-semibold text-rs-heading mb-2">Correlation</h3>
-                    <div className="h-[calc(100%-28px)]">
-                      <ScatterChart data={scatterData} />
-                    </div>
-                  </div>
-                </div>
-              </LayoutItem>
-            </>
-          )}
-        </ResponsiveDashboardLayout>
-      </div>
-    </ThemeProvider>
-  );
+	return (
+		<ThemeProvider>
+			<SalesAnalyticsContent />
+		</ThemeProvider>
+	);
 }
