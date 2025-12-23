@@ -9,6 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TestRouteImport } from './routes/test'
+import { Route as LayoutEchartsRouteImport } from './routes/layout-echarts'
+import { Route as BasicEchartsRouteImport } from './routes/basic-echarts'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ExamplesSalesAnalyticsRouteImport } from './routes/examples/sales-analytics'
 import { Route as ExamplesPerformanceRouteImport } from './routes/examples/performance'
@@ -16,6 +19,21 @@ import { Route as ExamplesOperationsRouteImport } from './routes/examples/operat
 import { Route as ExamplesMarketingRouteImport } from './routes/examples/marketing'
 import { Route as ExamplesFinancialRouteImport } from './routes/examples/financial'
 
+const TestRoute = TestRouteImport.update({
+  id: '/test',
+  path: '/test',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LayoutEchartsRoute = LayoutEchartsRouteImport.update({
+  id: '/layout-echarts',
+  path: '/layout-echarts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BasicEchartsRoute = BasicEchartsRouteImport.update({
+  id: '/basic-echarts',
+  path: '/basic-echarts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -49,6 +67,9 @@ const ExamplesFinancialRoute = ExamplesFinancialRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/basic-echarts': typeof BasicEchartsRoute
+  '/layout-echarts': typeof LayoutEchartsRoute
+  '/test': typeof TestRoute
   '/examples/financial': typeof ExamplesFinancialRoute
   '/examples/marketing': typeof ExamplesMarketingRoute
   '/examples/operations': typeof ExamplesOperationsRoute
@@ -57,6 +78,9 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/basic-echarts': typeof BasicEchartsRoute
+  '/layout-echarts': typeof LayoutEchartsRoute
+  '/test': typeof TestRoute
   '/examples/financial': typeof ExamplesFinancialRoute
   '/examples/marketing': typeof ExamplesMarketingRoute
   '/examples/operations': typeof ExamplesOperationsRoute
@@ -66,6 +90,9 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/basic-echarts': typeof BasicEchartsRoute
+  '/layout-echarts': typeof LayoutEchartsRoute
+  '/test': typeof TestRoute
   '/examples/financial': typeof ExamplesFinancialRoute
   '/examples/marketing': typeof ExamplesMarketingRoute
   '/examples/operations': typeof ExamplesOperationsRoute
@@ -76,6 +103,9 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/basic-echarts'
+    | '/layout-echarts'
+    | '/test'
     | '/examples/financial'
     | '/examples/marketing'
     | '/examples/operations'
@@ -84,6 +114,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/basic-echarts'
+    | '/layout-echarts'
+    | '/test'
     | '/examples/financial'
     | '/examples/marketing'
     | '/examples/operations'
@@ -92,6 +125,9 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/basic-echarts'
+    | '/layout-echarts'
+    | '/test'
     | '/examples/financial'
     | '/examples/marketing'
     | '/examples/operations'
@@ -101,6 +137,9 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BasicEchartsRoute: typeof BasicEchartsRoute
+  LayoutEchartsRoute: typeof LayoutEchartsRoute
+  TestRoute: typeof TestRoute
   ExamplesFinancialRoute: typeof ExamplesFinancialRoute
   ExamplesMarketingRoute: typeof ExamplesMarketingRoute
   ExamplesOperationsRoute: typeof ExamplesOperationsRoute
@@ -110,6 +149,27 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/test': {
+      id: '/test'
+      path: '/test'
+      fullPath: '/test'
+      preLoaderRoute: typeof TestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/layout-echarts': {
+      id: '/layout-echarts'
+      path: '/layout-echarts'
+      fullPath: '/layout-echarts'
+      preLoaderRoute: typeof LayoutEchartsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/basic-echarts': {
+      id: '/basic-echarts'
+      path: '/basic-echarts'
+      fullPath: '/basic-echarts'
+      preLoaderRoute: typeof BasicEchartsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -157,6 +217,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BasicEchartsRoute: BasicEchartsRoute,
+  LayoutEchartsRoute: LayoutEchartsRoute,
+  TestRoute: TestRoute,
   ExamplesFinancialRoute: ExamplesFinancialRoute,
   ExamplesMarketingRoute: ExamplesMarketingRoute,
   ExamplesOperationsRoute: ExamplesOperationsRoute,
