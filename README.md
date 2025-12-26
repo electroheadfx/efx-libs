@@ -5,15 +5,19 @@ A comprehensive data visualization platform built with TanStack Start, featuring
 ## 🚀 Features
 
 - **Multi-Chart ECharts Compositions** - Combine multiple visualization types within single ECharts instances
+- **3 ECharts Demo Pages** - Basic Charts, Layout Systems, and Navigation Hub
 - **5 Domain-Specific Dashboards** - Sales Analytics, Performance Metrics, Financial Reports, Marketing, and Operations
 - **Advanced Chart Types**
   - `MultiGridChart` - 4 charts in 2x2 grid within one ECharts instance
   - `ComboChart` - Line + Bar + Scatter in single chart
   - `DualAxisChart` - Two Y-axes for different scales
   - `SplitPanelChart` - 2 side-by-side grids
+  - `MatrixChart` - Matrix coordinate system for multi-chart layouts
   - Custom series: Violin, Contour, Liquid Fill, and more
+- **Advanced Layout Systems** - DashboardLayout, DashboardGrid, ResponsiveDashboardLayout
 - **Responsive Layouts** - Desktop and mobile optimized with multiple layout presets per page
-- **Dark/Light Theme** - Seamless theme switching with RSuite integration
+- **Dark/Light/High-Contrast Themes** - Seamless theme switching with RSuite integration
+- **SSR-Safe Implementation** - Lazy loading patterns for ECharts in SSR environments
 - **Seeded Random Data** - Reproducible data generation for demos
 - **Type-Safe** - Full TypeScript support throughout
 
@@ -88,6 +92,7 @@ src/
 │   │   └── ThemeControlPanel.tsx      # Theme toggle
 │   ├── layout/                # Layout components
 │   │   ├── DashboardLayout.tsx
+│   │   ├── DashboardGrid.tsx
 │   │   ├── ResponsiveDashboardLayout.tsx
 │   │   └── layoutPresets.ts
 │   └── ui/                    # UI components
@@ -101,7 +106,10 @@ src/
 │   │   ├── financial.tsx              # Financial reports
 │   │   ├── marketing.tsx              # Marketing analytics
 │   │   └── operations.tsx             # Operations center
-│   └── index.tsx              # Home/navigation hub
+│   ├── index.tsx              # Landing page (introduction)
+│   ├── dashboard.tsx          # Dashboard navigation hub
+│   ├── basic-echarts.tsx      # 12 chart types demo
+│   └── layout-echarts.tsx     # 7 layout systems demo
 ├── lib/
 │   ├── sampleDataGenerator.ts         # Seeded random data
 │   ├── customSeries/                  # ECharts extensions
@@ -118,7 +126,41 @@ src/
     └── theme.types.ts
 ```
 
-## 🎨 Component Usage
+## 🔄 SSR-Safe Implementation
+
+### Lazy Loading Pattern
+
+For SSR environments, ECharts must be lazy-loaded to avoid `window is not defined` errors:
+
+```tsx
+import { lazy, Suspense } from 'react'
+
+// Lazy load ECharts components
+const ReactECharts = lazy(() => import('echarts-for-react'))
+const MatrixChart = lazy(() =>
+  import('@/components/charts/composed/MatrixChart').then(m => ({ default: m.MatrixChart }))
+)
+
+// Usage with Suspense
+function Chart() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center h-full">Loading...</div>}>
+      <ReactECharts option={option} style={{ height: '100%', width: '100%' }} />
+    </Suspense>
+  )
+}
+```
+
+### When to Use Each Pattern
+
+| Pattern | Use Case | Example Page |
+|---------|----------|-------------|
+| Direct import | Client-side only pages, simpler setup | `/basic-echarts` |
+| Lazy loading | SSR pages, better initial load performance | `/layout-echarts` |
+
+---
+
+## 🎯 Component Usage
 
 ### MultiGridChart - 4 Charts in One ECharts Instance
 
@@ -247,61 +289,327 @@ const kpis = [
 />
 ```
 
-## 📊 Dashboard Pages
+## 📊 Demo Pages
+
+### Page Structure
+
+| Route | Page | Purpose |
+|-------|------|--------|
+| `/` | Landing Page | Introduction to the demo with links to all sections |
+| `/basic-echarts` | Basic ECharts | 12 chart types showcase |
+| `/layout-echarts` | Layout Systems | 7 layout system demos |
+| `/dashboard` | Dashboard Hub | Navigation to 5 domain dashboards |
+| `/examples/*` | Dashboard Examples | Domain-specific dashboards |
+
+### Landing Page (`/`)
+
+**Purpose**: Beautiful introduction page presenting the three main demo areas.
+
+**Features**:
+- Hero section with application overview
+- Three showcase cards for demo pages (Basic ECharts, Layout Systems, Dashboard Hub)
+- Quick statistics (12+ chart types, 7 layouts, 5 dashboards, 3 themes)
+- Tech stack display
+- Theme control panel
+
+### Basic ECharts (`/basic-echarts`)
+
+**Purpose**: Comprehensive showcase of 12 different chart types with direct ECharts integration.
+
+**Chart Types Demonstrated**:
+1. Line Chart - Time series trends
+2. Area Chart - Volume over time
+3. Bar Chart - Categorical comparison
+4. Pie Chart - Market share
+5. Donut Chart - Category distribution
+6. Scatter Chart - Correlation analysis
+7. Horizontal Bar - Regional performance
+8. Stacked Area - Multi-series
+9. Multi-Grid Chart - 4 charts in 2x2 layout (single ECharts instance)
+10. Dual-Axis Chart - Different scales
+11. Combo Chart - Line + Bar + Scatter
+12. Radar Chart - Multi-dimensional comparison
+
+**Implementation Pattern**:
+- Direct `echarts-for-react` import (not lazy loaded)
+- Self-contained data generation utilities
+- Fixed height charts (`h-80` = 320px)
+- RSuite Grid/Row/Col for layout
+
+```tsx
+import ReactECharts from 'echarts-for-react'
+
+function DemoChartContainer({ option, title }: { option: EChartsOption; title: string }) {
+  const { echartsTheme } = useAppTheme()
+  return (
+    <Panel bordered shaded header={title} className="bg-rs-bg-card">
+      <div className="h-80">
+        <ReactECharts
+          option={option}
+          theme={echartsTheme}
+          style={{ height: '100%', width: '100%' }}
+        />
+      </div>
+    </Panel>
+  )
+}
+```
+
+#### Layout Systems (`/layout-echarts`)
+
+**Purpose**: Showcase of 7 different layout systems for organizing charts and components.
+
+**Layout Demos**:
+1. **Analytics Layout** - KPI cards + Main chart + Sidebar (DashboardLayout)
+2. **Report Layout** - Header + Main + Sidebar + Footer (DashboardLayout)
+3. **Comparison Layout** - Side-by-side with title and summary (DashboardLayout)
+4. **MatrixChart Layout** - Multiple charts in single ECharts instance (MatrixChart)
+5. **Dynamic Proportions** - Customizable column ratios (DashboardLayout)
+6. **DashboardGrid** - Auto-layout with flexible rows (DashboardGrid)
+7. **Responsive Layout** - Breakpoint-based layout changes (ResponsiveDashboardLayout)
+
+**Implementation Pattern**:
+- SSR-safe lazy loading for ECharts
+- Flexible height using flexbox + absolute positioning
+- Multiple layout component systems
+
+```tsx
+// SSR-safe lazy loading
+const ReactECharts = lazy(() => import('echarts-for-react'))
+const MatrixChart = lazy(() => import('@/components/charts/composed/MatrixChart').then(m => ({ default: m.MatrixChart })))
+
+// Flexible height chart wrapper
+function ChartPanel({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="h-full w-full flex flex-col border border-rs-border rounded-md bg-rs-bg-card p-4">
+      <h3 className="text-lg font-semibold text-rs-heading mb-2 shrink-0">{title}</h3>
+      <div className="flex-1 min-h-0 relative">
+        <div className="absolute inset-0">{children}</div>
+      </div>
+    </div>
+  )
+}
+```
+
+### Page Comparison
+
+| Feature | Landing (`/`) | Basic ECharts | Layout ECharts | Dashboard Hub |
+|---------|---------------|---------------|----------------|---------------|
+| **Purpose** | Introduction | 12 chart types | 7 layout demos | Navigate dashboards |
+| **ECharts** | None | Direct import | Lazy (SSR-safe) | None |
+| **Layout** | Tailwind | RSuite Grid | DashboardLayout | Tailwind |
+| **Route** | `/` | `/basic-echarts` | `/layout-echarts` | `/dashboard` |
+
+### Dashboard Examples
 
 ### Sales Analytics (`/examples/sales-analytics`)
 
-**Matrix Layout**: MultiGridChart with revenue/orders/categories + sidebar with DualAxisChart and ComboChart
-
-**Detailed Layout**: ComboChart (Revenue + Orders + Profit scatter) + DualAxisChart for margin analysis
-
-**Executive Layout**: DualAxisChart for revenue vs growth + ComboChart for category performance
-
 ### Performance Metrics (`/examples/performance`)
-
-**Matrix Layout**: System overview with CPU/Memory/Disk/Network metrics in 4-grid layout
-
-**Real-time Layout**: ComboChart showing CPU + Memory + Network events
-
-**Historical Layout**: DualAxisChart for throughput vs error rate
 
 ### Financial Reports (`/examples/financial`)
 
-**Matrix Layout**: P&L dashboard with revenue, profit, and category breakdowns
-
-**Trends Layout**: DualAxisChart for revenue vs margin trends
-
-**Summary Layout**: ComboChart for comprehensive P&L analysis
-
 ### Marketing (`/examples/marketing`)
 
-**Matrix Layout**: Campaign metrics across channels and quarters
-
-**Campaigns Layout**: Engagement analysis with Line + Bar + Scatter
-
-**Funnel Layout**: Conversion funnel with volume + rate dual-axis
+Campaign analytics with engagement metrics and audience demographics.
 
 ### Operations (`/examples/operations`)
 
-**Matrix Layout**: Operations center with team performance and priority tracking
+Operational monitoring with throughput tracking and anomaly detection.
 
-**Live Layout**: Real-time throughput, queue depth, and events
+---
 
-**Daily Layout**: Productivity vs error rate analysis
+## 🏗️ Layout Systems API Reference
 
-## 🎨 Theme System
+### DashboardLayout - CSS Grid Template Areas
 
-The app supports light and dark themes using RSuite's theme system:
+**Location:** `src/components/layout/DashboardLayout.tsx`
+
+Precise positioning using CSS Grid template areas. Best for complex, fixed layouts.
 
 ```tsx
-import { useAppTheme } from '@/providers/ThemeProvider';
+import { DashboardLayout, LayoutItem, type LayoutTemplate } from '@/components/layout'
+
+const template: LayoutTemplate = {
+  areas: `
+    "kpi1 kpi2 kpi3 kpi4"
+    "main main main side"
+    "main main main side"
+  `,
+  columns: ['1fr', '1fr', '1fr', '1fr'],  // Column sizes
+  rows: ['100px', '1fr', '1fr'],           // Row sizes (use '1fr' for flexible)
+  gap: 16,                                  // Gap in pixels
+}
+
+<DashboardLayout template={template}>
+  <LayoutItem area="kpi1"><KPICard title="Revenue" value="$1.2M" change="+15%" /></LayoutItem>
+  <LayoutItem area="main"><ChartPanel title="Revenue"><Chart /></ChartPanel></LayoutItem>
+  <LayoutItem area="side"><ChartPanel title="Breakdown"><PieChart /></ChartPanel></LayoutItem>
+</DashboardLayout>
+```
+
+**LayoutTemplate Props:**
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `areas` | `string` | CSS grid-template-areas string with quoted area names |
+| `columns` | `string[]` | Column sizes (e.g., `['1fr', '300px', '1fr']`) |
+| `rows` | `string[]` | Row sizes (e.g., `['100px', '1fr', '80px']`) - Use `1fr` for flexible heights |
+| `gap` | `number` | Gap between items in pixels |
+
+### DashboardGrid - Auto-Layout Grid
+
+**Location:** `src/components/layout/DashboardGrid.tsx`
+
+Simpler API for automatic grid layouts. Best for uniform item sizes.
+
+```tsx
+import { DashboardGrid } from '@/components/layout'
+
+<DashboardGrid columns={3} gap={16} fillHeight>
+  <ChartPanel title="Chart 1"><Chart1 /></ChartPanel>
+  <ChartPanel title="Chart 2"><Chart2 /></ChartPanel>
+  <ChartPanel title="Chart 3"><Chart3 /></ChartPanel>
+</DashboardGrid>
+```
+
+**DashboardGrid Props:**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `columns` | `number \| { sm?: number; md?: number; lg?: number }` | `2` | Number of columns or responsive breakpoints |
+| `gap` | `number \| string` | `16` | Gap between items |
+| `rowHeight` | `number \| string` | `'auto'` | Fixed row height |
+| `fillHeight` | `boolean` | `false` | When true, uses `1fr` rows to fill container height |
+| `className` | `string` | `''` | Additional CSS classes |
+
+### ResponsiveDashboardLayout - Breakpoint-Based Layouts
+
+**Location:** `src/components/layout/ResponsiveDashboardLayout.tsx`
+
+Automatically switches between layout templates based on screen size.
+
+```tsx
+import { ResponsiveDashboardLayout, LayoutItem } from '@/components/layout'
+
+<ResponsiveDashboardLayout
+  templates={{
+    desktop: {
+      areas: `"kpi1 kpi2" "main main"`,
+      columns: ['1fr', '1fr'],
+      rows: ['100px', '1fr'],
+      gap: 16,
+    },
+    mobile: {
+      areas: `"kpi1" "kpi2" "main"`,
+      columns: ['1fr'],
+      rows: ['80px', '80px', '1fr'],
+      gap: 12,
+    },
+  }}
+>
+  <LayoutItem area="kpi1"><KPICard ... /></LayoutItem>
+  <LayoutItem area="kpi2"><KPICard ... /></LayoutItem>
+  <LayoutItem area="main"><Chart /></LayoutItem>
+</ResponsiveDashboardLayout>
+```
+
+### MatrixChart - Multi-Chart ECharts Grid
+
+**Location:** `src/components/charts/composed/MatrixChart.tsx`
+
+Renders multiple charts in a single ECharts canvas instance using a matrix coordinate system.
+
+```tsx
+import { MatrixChart } from '@/components/charts/composed'
+import { useMatrixLayout } from '@/hooks/useMatrixLayout'
+import type { MatrixSection } from '@/types/matrixLayout.types'
+
+const sections: MatrixSection[] = [
+  { id: 'header', option: { title: { text: 'Overview', left: 'center' } } },
+  { id: 'main', option: { xAxis: {...}, yAxis: {...}, series: [{type: 'line'}] } },
+  { id: 'sidebar', option: { series: [{ type: 'pie', radius: '50%' }] } },
+]
+
+const layout = useMatrixLayout({
+  sections: ['header', 'main', 'sidebar'],
+  breakpoints: {
+    desktop: {
+      template: `
+        | header  | header  | header  |
+        | main    | main    | sidebar |
+      `,
+    },
+  },
+})
+
+<Suspense fallback={<div>Loading...</div>}>
+  <MatrixChart sections={sections} mediaDefinitions={layout} />
+</Suspense>
+```
+
+---
+
+## 📐 Height Management Best Practices
+
+### Fixed Height
+
+Simplest approach - predictable but doesn't fill available space.
+
+```tsx
+<div className="h-80"> {/* 320px fixed height */}
+  <ReactECharts option={option} style={{ height: '100%', width: '100%' }} />
+</div>
+```
+
+### Flexible Height
+
+Fills available space using flexbox + absolute positioning.
+
+```tsx
+<div className="h-full w-full flex flex-col">
+  <h3 className="shrink-0">Title</h3>
+  <div className="flex-1 min-h-0 relative">
+    <div className="absolute inset-0">
+      <ReactECharts option={option} style={{ height: '100%', width: '100%' }} />
+    </div>
+  </div>
+</div>
+```
+
+**Key CSS patterns:**
+- `flex-1 min-h-0` - Allows flex item to shrink below content size
+- `relative` + `absolute inset-0` - Creates positioning context for chart
+- Parent chain must have defined heights (`h-full`, `h-screen`, etc.)
+
+### Grid with Flexible Rows
+
+Use `1fr` units for rows that should fill available space.
+
+```tsx
+const template: LayoutTemplate = {
+  areas: `"header" "main"`,
+  columns: ['1fr'],
+  rows: ['80px', '1fr'],  // Header fixed, main fills remaining
+  gap: 16,
+}
+```
+
+## 🎨 Theme Integration
+
+The app supports light, dark, and high-contrast themes using RSuite's theme system:
+
+```tsx
+import { useAppTheme } from '@/providers/ThemeProvider'
 
 function MyComponent() {
-  const { theme, setTheme } = useAppTheme();
+  const { theme, setTheme, echartsTheme } = useAppTheme()
   
-  const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
-  };
+  // theme: 'light' | 'dark' | 'high-contrast'
+  // echartsTheme: 'default' | 'dark' (for ECharts)
+  
+  return (
+    <ReactECharts option={option} theme={echartsTheme} />
+  )
 }
 ```
 

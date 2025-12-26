@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TestRouteImport } from './routes/test'
 import { Route as LayoutEchartsRouteImport } from './routes/layout-echarts'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as BasicEchartsRouteImport } from './routes/basic-echarts'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ExamplesSalesAnalyticsRouteImport } from './routes/examples/sales-analytics'
@@ -27,6 +28,11 @@ const TestRoute = TestRouteImport.update({
 const LayoutEchartsRoute = LayoutEchartsRouteImport.update({
   id: '/layout-echarts',
   path: '/layout-echarts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BasicEchartsRoute = BasicEchartsRouteImport.update({
@@ -68,6 +74,7 @@ const ExamplesFinancialRoute = ExamplesFinancialRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/basic-echarts': typeof BasicEchartsRoute
+  '/dashboard': typeof DashboardRoute
   '/layout-echarts': typeof LayoutEchartsRoute
   '/test': typeof TestRoute
   '/examples/financial': typeof ExamplesFinancialRoute
@@ -79,6 +86,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/basic-echarts': typeof BasicEchartsRoute
+  '/dashboard': typeof DashboardRoute
   '/layout-echarts': typeof LayoutEchartsRoute
   '/test': typeof TestRoute
   '/examples/financial': typeof ExamplesFinancialRoute
@@ -91,6 +99,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/basic-echarts': typeof BasicEchartsRoute
+  '/dashboard': typeof DashboardRoute
   '/layout-echarts': typeof LayoutEchartsRoute
   '/test': typeof TestRoute
   '/examples/financial': typeof ExamplesFinancialRoute
@@ -104,6 +113,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/basic-echarts'
+    | '/dashboard'
     | '/layout-echarts'
     | '/test'
     | '/examples/financial'
@@ -115,6 +125,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/basic-echarts'
+    | '/dashboard'
     | '/layout-echarts'
     | '/test'
     | '/examples/financial'
@@ -126,6 +137,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/basic-echarts'
+    | '/dashboard'
     | '/layout-echarts'
     | '/test'
     | '/examples/financial'
@@ -138,6 +150,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BasicEchartsRoute: typeof BasicEchartsRoute
+  DashboardRoute: typeof DashboardRoute
   LayoutEchartsRoute: typeof LayoutEchartsRoute
   TestRoute: typeof TestRoute
   ExamplesFinancialRoute: typeof ExamplesFinancialRoute
@@ -161,6 +174,13 @@ declare module '@tanstack/react-router' {
       path: '/layout-echarts'
       fullPath: '/layout-echarts'
       preLoaderRoute: typeof LayoutEchartsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/basic-echarts': {
@@ -218,6 +238,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BasicEchartsRoute: BasicEchartsRoute,
+  DashboardRoute: DashboardRoute,
   LayoutEchartsRoute: LayoutEchartsRoute,
   TestRoute: TestRoute,
   ExamplesFinancialRoute: ExamplesFinancialRoute,
