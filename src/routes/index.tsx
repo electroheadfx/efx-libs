@@ -327,13 +327,13 @@ function LandingPage() {
 
         {/* Glow orbs */}
         <div
-          className={`absolute -top-20 -left-20 w-[600px] h-[600px] blur-[100px] ${styles.heroGlow1}`}
+          className={`absolute -top-20 -left-20 w-150 h-150 blur-[100px] ${styles.heroGlow1}`}
         />
         <div
-          className={`absolute -top-10 -right-20 w-[500px] h-[500px] blur-[100px] ${styles.heroGlow2}`}
+          className={`absolute -top-10 -right-20 w-125 h-125 blur-[100px] ${styles.heroGlow2}`}
         />
         <div
-          className={`absolute -bottom-32 left-1/2 -translate-x-1/2 w-[800px] h-[400px] blur-[120px] ${styles.heroGlow3}`}
+          className={`absolute -bottom-32 left-1/2 -translate-x-1/2 w-200 h-100 blur-[120px] ${styles.heroGlow3}`}
         />
 
         {/* Content */}

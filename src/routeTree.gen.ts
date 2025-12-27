@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TestRouteImport } from './routes/test'
 import { Route as LayoutEchartsRouteImport } from './routes/layout-echarts'
+import { Route as EfxChartsRouteImport } from './routes/efx-charts'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as BasicEchartsRouteImport } from './routes/basic-echarts'
 import { Route as IndexRouteImport } from './routes/index'
@@ -28,6 +29,11 @@ const TestRoute = TestRouteImport.update({
 const LayoutEchartsRoute = LayoutEchartsRouteImport.update({
   id: '/layout-echarts',
   path: '/layout-echarts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EfxChartsRoute = EfxChartsRouteImport.update({
+  id: '/efx-charts',
+  path: '/efx-charts',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/basic-echarts': typeof BasicEchartsRoute
   '/dashboard': typeof DashboardRoute
+  '/efx-charts': typeof EfxChartsRoute
   '/layout-echarts': typeof LayoutEchartsRoute
   '/test': typeof TestRoute
   '/examples/financial': typeof ExamplesFinancialRoute
@@ -87,6 +94,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/basic-echarts': typeof BasicEchartsRoute
   '/dashboard': typeof DashboardRoute
+  '/efx-charts': typeof EfxChartsRoute
   '/layout-echarts': typeof LayoutEchartsRoute
   '/test': typeof TestRoute
   '/examples/financial': typeof ExamplesFinancialRoute
@@ -100,6 +108,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/basic-echarts': typeof BasicEchartsRoute
   '/dashboard': typeof DashboardRoute
+  '/efx-charts': typeof EfxChartsRoute
   '/layout-echarts': typeof LayoutEchartsRoute
   '/test': typeof TestRoute
   '/examples/financial': typeof ExamplesFinancialRoute
@@ -114,6 +123,7 @@ export interface FileRouteTypes {
     | '/'
     | '/basic-echarts'
     | '/dashboard'
+    | '/efx-charts'
     | '/layout-echarts'
     | '/test'
     | '/examples/financial'
@@ -126,6 +136,7 @@ export interface FileRouteTypes {
     | '/'
     | '/basic-echarts'
     | '/dashboard'
+    | '/efx-charts'
     | '/layout-echarts'
     | '/test'
     | '/examples/financial'
@@ -138,6 +149,7 @@ export interface FileRouteTypes {
     | '/'
     | '/basic-echarts'
     | '/dashboard'
+    | '/efx-charts'
     | '/layout-echarts'
     | '/test'
     | '/examples/financial'
@@ -151,6 +163,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BasicEchartsRoute: typeof BasicEchartsRoute
   DashboardRoute: typeof DashboardRoute
+  EfxChartsRoute: typeof EfxChartsRoute
   LayoutEchartsRoute: typeof LayoutEchartsRoute
   TestRoute: typeof TestRoute
   ExamplesFinancialRoute: typeof ExamplesFinancialRoute
@@ -174,6 +187,13 @@ declare module '@tanstack/react-router' {
       path: '/layout-echarts'
       fullPath: '/layout-echarts'
       preLoaderRoute: typeof LayoutEchartsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/efx-charts': {
+      id: '/efx-charts'
+      path: '/efx-charts'
+      fullPath: '/efx-charts'
+      preLoaderRoute: typeof EfxChartsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -239,6 +259,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BasicEchartsRoute: BasicEchartsRoute,
   DashboardRoute: DashboardRoute,
+  EfxChartsRoute: EfxChartsRoute,
   LayoutEchartsRoute: LayoutEchartsRoute,
   TestRoute: TestRoute,
   ExamplesFinancialRoute: ExamplesFinancialRoute,

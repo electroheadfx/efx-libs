@@ -1,0 +1,195 @@
+/**
+ * useEChartsInstance Hook
+ *
+ * Core hook for ECharts lifecycle management.
+ * Provides same event API as echarts-for-react with additional flexibility.
+ */
+
+import { useRef, useEffect, useCallback, type RefObject } from "react"
+import * as echarts from "echarts/core"
+import { CanvasRenderer, SVGRenderer } from "echarts/renderers"
+import {
+  GridComponent,
+  TooltipComponent,
+  TitleComponent,
+  LegendComponent,
+  DataZoomComponent,
+  ToolboxComponent,
+  MarkLineComponent,
+  MarkPointComponent,
+} from "echarts/components"
+import {
+  LineChart,
+  BarChart,
+  PieChart,
+  ScatterChart,
+  CandlestickChart,
+  HeatmapChart,
+} from "echarts/charts"
+import type { EChartsType, EChartsCoreOption } from "echarts/core"
+
+/** Event handler for useEChartsInstance (uses core EChartsType) */
+type CoreEventHandler = (
+  params: Record<string, unknown>,
+  chart: EChartsType,
+) => void
+
+// Register ECharts components
+echarts.use([
+  CanvasRenderer,
+  SVGRenderer,
+  GridComponent,
+  TooltipComponent,
+  TitleComponent,
+  LegendComponent,
+  DataZoomComponent,
+  ToolboxComponent,
+  MarkLineComponent,
+  MarkPointComponent,
+  LineChart,
+  BarChart,
+  PieChart,
+  ScatterChart,
+  CandlestickChart,
+  HeatmapChart,
+])
+
+/**
+ * Core hook for managing ECharts instance lifecycle
+ *
+ * @param containerRef - Ref to the container element
+ * @param options - Configuration options
+ * @returns Object with getEchartsInstance function and instanceRef
+ *
+ * @example
+ * ```tsx
+ * const containerRef = useRef<HTMLDivElement>(null);
+ * const { getEchartsInstance } = useEChartsInstance(containerRef, {
+ *   option: chartOption,
+ *   events: { click: (params, chart) => console.log(params) },
+ *   onReady: (chart) => console.log('Chart ready'),
+ * });
+ * ```
+ */
+/**
+ * Options for useEChartsInstance hook
+ */
+export interface UseEChartsInstanceOptions {
+  /** ECharts option configuration */
+  option: EChartsCoreOption
+  /** Event handlers (same API as echarts-for-react onEvents) */
+  events?: Record<string, CoreEventHandler>
+  /** Callback when chart instance is ready */
+  onReady?: (chart: EChartsType) => void
+  /** Theme name (must be registered with echarts.registerTheme) */
+  theme?: string
+  /** Renderer type */
+  renderer?: "canvas" | "svg"
+  /** Whether to auto-resize on container size change */
+  autoResize?: boolean
+}
+
+/**
+ * Return type for useEChartsInstance hook
+ */
+export interface UseEChartsInstanceReturn {
+  /** Get the ECharts instance */
+  getEchartsInstance: () => EChartsType | null
+  /** Ref to the ECharts instance */
+  instanceRef: React.MutableRefObject<EChartsType | null>
+}
+
+export function useEChartsInstance(
+  containerRef: RefObject<HTMLDivElement | null>,
+  options: UseEChartsInstanceOptions,
+): UseEChartsInstanceReturn {
+  const {
+    option,
+    events,
+    onReady,
+    theme,
+    renderer = "canvas",
+    autoResize = true,
+  } = options
+
+  const instanceRef = useRef<EChartsType | null>(null)
+  const eventsRef = useRef<Record<string, CoreEventHandler> | undefined>(
+    events,
+  )
+  const resizeObserverRef = useRef<ResizeObserver | null>(null)
+
+  // Keep events ref up to date
+  useEffect(() => {
+    eventsRef.current = events
+  }, [events])
+
+  // Initialize chart
+  useEffect(() => {
+    if (!containerRef.current) return
+
+    // Dispose existing instance if any
+    if (instanceRef.current) {
+      instanceRef.current.dispose()
+    }
+
+    // Initialize ECharts
+    const chart = echarts.init(containerRef.current, theme, { renderer })
+    instanceRef.current = chart
+
+    // Set initial option
+    chart.setOption(option)
+
+    // Bind events (same pattern as echarts-for-react)
+    if (eventsRef.current) {
+      for (const [eventName, handler] of Object.entries(eventsRef.current)) {
+        // biome-ignore lint/suspicious/noExplicitAny: ECharts event params vary by event type
+        chart.on(eventName, (params: any) => {
+          handler(params, chart)
+        })
+      }
+    }
+
+    // Ready callback
+    onReady?.(chart)
+
+    // Auto-resize observer
+    if (autoResize && containerRef.current) {
+      resizeObserverRef.current = new ResizeObserver(() => {
+        if (instanceRef.current && !instanceRef.current.isDisposed()) {
+          instanceRef.current.resize()
+        }
+      })
+      resizeObserverRef.current.observe(containerRef.current)
+    }
+
+    // Cleanup
+    return () => {
+      resizeObserverRef.current?.disconnect()
+      if (instanceRef.current && !instanceRef.current.isDisposed()) {
+        instanceRef.current.dispose()
+      }
+      instanceRef.current = null
+    }
+  }, [containerRef, theme, renderer, autoResize])
+
+  // Update option when it changes
+  useEffect(() => {
+    if (instanceRef.current && !instanceRef.current.isDisposed()) {
+      instanceRef.current.setOption(option, { notMerge: false })
+    }
+  }, [option])
+
+  // Expose chart instance getter
+  const getEchartsInstance = useCallback(() => instanceRef.current, [])
+
+  return {
+    getEchartsInstance,
+    instanceRef,
+  }
+}
+
+/**
+ * Re-export echarts for external use
+ */
+export { echarts }
+export type { EChartsType, EChartsCoreOption }
