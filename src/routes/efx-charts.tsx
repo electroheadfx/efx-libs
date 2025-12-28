@@ -19,54 +19,6 @@ export const Route = createFileRoute('/efx-charts')({
 })
 
 /**
- * Generate time-based series data matching finance.js generateSingleSeriesData
- */
-function generateSingleSeriesData(
-  dayCount: number,
-  inverseXY: boolean,
-  seed: number
-): Array<[string | number, string | number]> {
-  const dayStart = new Date('2025-05-05T00:00:00.000Z')
-  const timeStart = dayStart.getTime()
-  const sevenDay = 7 * 1000 * 3600 * 24
-  const seriesData: Array<[string | number, string | number]> = []
-
-  let localSeed = seed
-  const seededRandom = () => {
-    const x = Math.sin(localSeed++) * 10000
-    return x - Math.floor(x)
-  }
-
-  let lastVal = Math.round(seededRandom() * 300)
-  let turnCount: number | null = null
-  let sign = -1
-
-  for (let idx = 0; idx < dayCount; idx++) {
-    if (turnCount === null || idx >= turnCount) {
-      turnCount =
-        idx + Math.round((dayCount / 4) * ((seededRandom() - 0.5) * 0.1))
-      sign = -sign
-    }
-    const deltaMag = 50
-    const delta = Math.round(
-      seededRandom() * deltaMag - deltaMag / 2 + (sign * deltaMag) / 3
-    )
-    const val = Math.max(0, (lastVal += delta))
-    const xTime = timeStart + idx * sevenDay
-    const year = new Date(xTime).getFullYear()
-    const month = String(new Date(xTime).getMonth() + 1).padStart(2, '0')
-    const day = String(new Date(xTime).getDate()).padStart(2, '0')
-    const dataXVal = `${year}-${month}-${day}`
-    const item: [string | number, string | number] = [dataXVal, val]
-    if (inverseXY) {
-      item.reverse()
-    }
-    seriesData.push(item)
-  }
-  return seriesData
-}
-
-/**
  * Finance Dashboard Demo
  */
 function EfxChartsDemo() {
@@ -100,8 +52,8 @@ function EfxChartsDemo() {
 
   return (
     <div
-      className="h-screen bg-rs-body p-6 flex flex-col"
-      style={{ maxHeight: '100vh' }}
+      className="bg-rs-body p-6 flex flex-col"
+      style={{ height: 'calc(100vh - 70px)', maxHeight: 'calc(100vh - 70px)' }}
     >
       {/* Header */}
       <Panel
@@ -172,7 +124,7 @@ function EfxChartsDemo() {
             id="section_title_1"
             title={{
               text: 'Finance Dashboard',
-              textStyle: { fontSize: 16 },
+              textStyle: { fontSize: 30 },
             }}
             padding="0,10,0,10"
           />
@@ -183,10 +135,10 @@ function EfxChartsDemo() {
             type="line"
             title={{ text: 'Header Section', textStyle: { fontSize: 14 } }}
             data={data.header}
-            xAxis={{ type: 'time' }}
-            yAxis={{ splitNumber: 2, splitLine: { show: false } }}
+            xAxis={{ type: 'time', splitLine: { show: false } }}
+            yAxis={{ splitLine: { show: false } }}
             series={{ symbol: 'none' }}
-            padding="30,10,10,10"
+            padding="20,10,10,10"
           />
 
           {/* Sidebar Section */}
@@ -204,7 +156,7 @@ function EfxChartsDemo() {
               type: 'time',
               axisLabel: { hideOverlap: true },
             }}
-            padding="40,10,20,10"
+            padding="20,10,10,10"
           />
 
           {/* Main Content Area */}
@@ -232,6 +184,54 @@ function EfxChartsDemo() {
       </div>
     </div>
   )
+}
+
+/**
+ * Generate time-based series data matching finance.js generateSingleSeriesData
+ */
+function generateSingleSeriesData(
+  dayCount: number,
+  inverseXY: boolean,
+  seed: number
+): Array<[string | number, string | number]> {
+  const dayStart = new Date('2025-05-05T00:00:00.000Z')
+  const timeStart = dayStart.getTime()
+  const sevenDay = 7 * 1000 * 3600 * 24
+  const seriesData: Array<[string | number, string | number]> = []
+
+  let localSeed = seed
+  const seededRandom = () => {
+    const x = Math.sin(localSeed++) * 10000
+    return x - Math.floor(x)
+  }
+
+  let lastVal = Math.round(seededRandom() * 300)
+  let turnCount: number | null = null
+  let sign = -1
+
+  for (let idx = 0; idx < dayCount; idx++) {
+    if (turnCount === null || idx >= turnCount) {
+      turnCount =
+        idx + Math.round((dayCount / 4) * ((seededRandom() - 0.5) * 0.1))
+      sign = -sign
+    }
+    const deltaMag = 50
+    const delta = Math.round(
+      seededRandom() * deltaMag - deltaMag / 2 + (sign * deltaMag) / 3
+    )
+    const val = Math.max(0, (lastVal += delta))
+    const xTime = timeStart + idx * sevenDay
+    const year = new Date(xTime).getFullYear()
+    const month = String(new Date(xTime).getMonth() + 1).padStart(2, '0')
+    const day = String(new Date(xTime).getDate()).padStart(2, '0')
+    const dataXVal = `${year}-${month}-${day}`
+    const item: [string | number, string | number] = [dataXVal, val]
+    if (inverseXY) {
+      item.reverse()
+    }
+    seriesData.push(item)
+  }
+  return seriesData
 }
 
 export default EfxChartsDemo
