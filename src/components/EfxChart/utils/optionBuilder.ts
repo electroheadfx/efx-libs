@@ -11,7 +11,12 @@ import type {
   SectionCoordMap,
 } from "../types"
 import { parsePadding } from "./paddingParser"
-import { coordsToPercentages } from "./templateParser"
+import {
+  coordsToPercentages,
+  coordsToPercentagesWithGap,
+  type GapConfig,
+  type ContainerSize,
+} from "./templateParser"
 
 /**
  * ECharts MediaUnit type for responsive media queries
@@ -345,8 +350,16 @@ export function buildEChartsOption(
   sectionCoordMap: SectionCoordMap,
   columns: number,
   rows: number,
+  gap?: GapConfig,
+  containerSize?: ContainerSize,
 ): EChartsCoreOption {
-  const percentages = coordsToPercentages(sectionCoordMap, columns, rows)
+  // Use gap-aware function if gap is provided and container has dimensions
+  const hasGap = gap && (gap.x > 0 || gap.y > 0)
+  const hasContainerSize = containerSize && containerSize.width > 0 && containerSize.height > 0
+
+  const percentages = hasGap && hasContainerSize
+    ? coordsToPercentagesWithGap(sectionCoordMap, columns, rows, gap, containerSize)
+    : coordsToPercentages(sectionCoordMap, columns, rows)
 
   const grids: object[] = []
   const xAxes: object[] = []
@@ -463,18 +476,40 @@ export function buildMediaDefinitions(
   desktopLayout: { sectionCoordMap: SectionCoordMap; columns: number; rows: number },
   sections: EfxChartProps[],
   mobileMaxWidth = 500,
+  gap?: GapConfig,
+  containerSize?: ContainerSize,
 ): EfxMediaUnit[] {
-  const mobilePercentages = coordsToPercentages(
-    mobileLayout.sectionCoordMap,
-    mobileLayout.columns,
-    mobileLayout.rows,
-  )
+  // Use gap-aware function if gap is provided and container has dimensions
+  const hasGap = gap && (gap.x > 0 || gap.y > 0)
+  const hasContainerSize = containerSize && containerSize.width > 0 && containerSize.height > 0
 
-  const desktopPercentages = coordsToPercentages(
-    desktopLayout.sectionCoordMap,
-    desktopLayout.columns,
-    desktopLayout.rows,
-  )
+  const mobilePercentages = hasGap && hasContainerSize
+    ? coordsToPercentagesWithGap(
+      mobileLayout.sectionCoordMap,
+      mobileLayout.columns,
+      mobileLayout.rows,
+      gap,
+      containerSize
+    )
+    : coordsToPercentages(
+      mobileLayout.sectionCoordMap,
+      mobileLayout.columns,
+      mobileLayout.rows,
+    )
+
+  const desktopPercentages = hasGap && hasContainerSize
+    ? coordsToPercentagesWithGap(
+      desktopLayout.sectionCoordMap,
+      desktopLayout.columns,
+      desktopLayout.rows,
+      gap,
+      containerSize
+    )
+    : coordsToPercentages(
+      desktopLayout.sectionCoordMap,
+      desktopLayout.columns,
+      desktopLayout.rows,
+    )
 
   // Build grid options for each section with valid percentages - MUST apply padding
   const buildGridOptions = (

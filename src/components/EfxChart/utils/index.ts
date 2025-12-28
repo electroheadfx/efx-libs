@@ -9,6 +9,9 @@ export {
   parseLayoutTemplate,
   mirrorLayoutHorizontally,
   coordsToPercentages,
+  coordsToPercentagesWithGap,
+  type GapConfig,
+  type ContainerSize,
 } from "./templateParser"
 
 export {

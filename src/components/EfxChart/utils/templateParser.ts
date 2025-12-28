@@ -214,3 +214,102 @@ export function coordsToPercentages(
 
   return result
 }
+
+/**
+ * Gap configuration for grid spacing
+ */
+export interface GapConfig {
+  /** Horizontal gap in pixels */
+  x: number
+  /** Vertical gap in pixels */
+  y: number
+}
+
+/**
+ * Container dimensions for pixel-to-percentage conversion
+ */
+export interface ContainerSize {
+  width: number
+  height: number
+}
+
+/**
+ * Convert section coordinates to percentage-based grid positions with gap support
+ * 
+ * Gaps are applied between grid sections (not at edges):
+ * - For N columns, there are (N-1) horizontal gaps
+ * - For M rows, there are (M-1) vertical gaps
+ * 
+ * @param sectionCoordMap - Map of section IDs to coordinates
+ * @param columns - Total number of columns
+ * @param rows - Total number of rows
+ * @param gap - Gap configuration in pixels
+ * @param containerSize - Container dimensions for pixel-to-percentage conversion
+ * @returns Map of section IDs to { left, right, top, bottom } percentages
+ */
+export function coordsToPercentagesWithGap(
+  sectionCoordMap: SectionCoordMap,
+  columns: number,
+  rows: number,
+  gap: GapConfig,
+  containerSize: ContainerSize,
+): Record<
+  string,
+  { left: string; right: string; top: string; bottom: string }
+> {
+  const result: Record<
+    string,
+    { left: string; right: string; top: string; bottom: string }
+  > = {}
+
+  // Convert pixel gaps to percentages
+  const gapXPercent = containerSize.width > 0 ? (gap.x / containerSize.width) * 100 : 0
+  const gapYPercent = containerSize.height > 0 ? (gap.y / containerSize.height) * 100 : 0
+
+  // Total gap space
+  const totalGapX = (columns - 1) * gapXPercent
+  const totalGapY = (rows - 1) * gapYPercent
+
+  // Available space after gaps
+  const availableWidth = 100 - totalGapX
+  const availableHeight = 100 - totalGapY
+
+  // Width/height per column/row
+  const colWidth = availableWidth / columns
+  const rowHeight = availableHeight / rows
+
+  for (const [sectionId, [colCoord, rowCoord]] of Object.entries(
+    sectionCoordMap,
+  )) {
+    // Parse column coordinates
+    const colStart = typeof colCoord === "number" ? colCoord : colCoord[0]
+    const colEnd = typeof colCoord === "number" ? colCoord : colCoord[1]
+
+    // Parse row coordinates
+    const rowStart = typeof rowCoord === "number" ? rowCoord : rowCoord[0]
+    const rowEnd = typeof rowCoord === "number" ? rowCoord : rowCoord[1]
+
+    // Calculate left position: (columns before * colWidth) + (gaps before * gapX)
+    const left = colStart * colWidth + colStart * gapXPercent
+
+    // Calculate right position: remaining columns + remaining gaps
+    const colsAfter = columns - colEnd - 1
+    const right = colsAfter * colWidth + colsAfter * gapXPercent
+
+    // Calculate top position: (rows before * rowHeight) + (gaps before * gapY)
+    const top = rowStart * rowHeight + rowStart * gapYPercent
+
+    // Calculate bottom position: remaining rows + remaining gaps
+    const rowsAfter = rows - rowEnd - 1
+    const bottom = rowsAfter * rowHeight + rowsAfter * gapYPercent
+
+    result[sectionId] = {
+      left: `${left}%`,
+      right: `${right}%`,
+      top: `${top}%`,
+      bottom: `${bottom}%`,
+    }
+  }
+
+  return result
+}

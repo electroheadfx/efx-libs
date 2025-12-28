@@ -5,8 +5,16 @@
  * with matrix-based grid positioning from ASCII templates.
  */
 
-import { useRef, useMemo, Children, isValidElement } from 'react'
+import {
+  useRef,
+  useMemo,
+  Children,
+  isValidElement,
+  useState,
+  useCallback,
+} from 'react'
 import { useEChartsInstance, type EChartsType } from './core'
+import { useResizeObserver } from './core/useResizeObserver'
 import { EfxChart } from './EfxChart'
 import {
   parseLayoutTemplate,
@@ -14,6 +22,8 @@ import {
   buildEChartsOption,
   buildMediaDefinitions,
   type EfxMediaUnit,
+  type GapConfig,
+  type ContainerSize,
 } from './utils'
 import type { EfxChartsLayoutProps, EfxChartProps } from './types'
 
@@ -58,6 +68,9 @@ function extractChartProps(children: React.ReactNode): EfxChartProps[] {
 export function EfxChartsLayout({
   template,
   sidebarPosition = 'left',
+  gap = 0,
+  gapX,
+  gapY,
   breakpoints,
   className,
   style,
@@ -68,6 +81,34 @@ export function EfxChartsLayout({
   theme,
 }: EfxChartsLayoutProps) {
   const containerRef = useRef<HTMLDivElement>(null)
+
+  // Track container size for pixel-based gap calculations
+  const [containerSize, setContainerSize] = useState<ContainerSize>({
+    width: 0,
+    height: 0,
+  })
+
+  // Update container size on resize
+  const handleResize = useCallback((entry: ResizeObserverEntry) => {
+    const { width, height } = entry.contentRect
+    setContainerSize({ width, height })
+  }, [])
+
+  // Observe container size
+  useResizeObserver(containerRef, {
+    onResize: handleResize,
+    debounceMs: 50,
+    enabled: true,
+  })
+
+  // Calculate gap configuration
+  const gapConfig: GapConfig = useMemo(
+    () => ({
+      x: gapX ?? gap,
+      y: gapY ?? gap,
+    }),
+    [gap, gapX, gapY]
+  )
 
   // Parse the template for all breakpoints
   const parsedLayouts = useMemo(() => parseLayoutTemplate(template), [template])
@@ -95,7 +136,9 @@ export function EfxChartsLayout({
       chartSections,
       desktopLayout.sectionCoordMap,
       desktopLayout.columns,
-      desktopLayout.rows
+      desktopLayout.rows,
+      gapConfig,
+      containerSize
     )
 
     // Add media queries for responsive behavior
@@ -104,14 +147,23 @@ export function EfxChartsLayout({
       mobileLayout,
       desktopLayout,
       chartSections,
-      mobileMaxWidth
+      mobileMaxWidth,
+      gapConfig,
+      containerSize
     )
 
     return {
       ...baseOption,
       media,
     } as unknown as import('./core').EChartsCoreOption
-  }, [chartSections, desktopLayout, mobileLayout, breakpoints])
+  }, [
+    chartSections,
+    desktopLayout,
+    mobileLayout,
+    breakpoints,
+    gapConfig,
+    containerSize,
+  ])
 
   // Handle chart ready callback
   const handleReady = useMemo(() => {

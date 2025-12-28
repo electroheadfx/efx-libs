@@ -325,6 +325,17 @@ export interface EfxChartsLayoutProps {
   /** Sidebar position for templates with sidebar sections */
   sidebarPosition?: "left" | "right"
 
+  // ===== GAP SPACING =====
+
+  /** Uniform gap between all sections in pixels */
+  gap?: number
+
+  /** Horizontal gap between columns in pixels (overrides gap for x-axis) */
+  gapX?: number
+
+  /** Vertical gap between rows in pixels (overrides gap for y-axis) */
+  gapY?: number
+
   /** Custom breakpoints for responsive behavior */
   breakpoints?: {
     mobile?: { maxWidth: number }

@@ -20,7 +20,7 @@ interface UseResizeObserverOptions {
  * Hook to observe element resize events
  */
 export function useResizeObserver<T extends HTMLElement>(
-  containerRef: RefObject<T>,
+  containerRef: RefObject<T | null>,
   options: UseResizeObserverOptions = {},
 ): void {
   const { onResize, debounceMs = 100, enabled = true } = options
@@ -60,7 +60,7 @@ export function useResizeObserver<T extends HTMLElement>(
  * Simplified resize observer that just calls resize on the target
  */
 export function useAutoResize<T extends HTMLElement>(
-  containerRef: RefObject<T>,
+  containerRef: RefObject<T | null>,
   resizeCallback: () => void,
   enabled = true,
 ): void {

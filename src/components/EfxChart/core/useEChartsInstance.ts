@@ -176,6 +176,9 @@ export function useEChartsInstance(
   useEffect(() => {
     if (instanceRef.current && !instanceRef.current.isDisposed()) {
       instanceRef.current.setOption(option, { notMerge: false })
+      // Resize after option update to ensure proper rendering
+      // This is especially important when gap percentages change based on container size
+      instanceRef.current.resize()
     }
   }, [option])
 

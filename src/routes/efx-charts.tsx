@@ -124,6 +124,7 @@ function EfxChartsDemo() {
           <EfxChartsLayout
             template={efxChartTemplate}
             sidebarPosition={sidebarPosition}
+            gap={20}
             onChartReady={handleChartReady}
             onEvents={handleEvents}
           >
@@ -135,7 +136,7 @@ function EfxChartsDemo() {
               data={data.header}
               xAxis={{ type: 'time' }}
               series={{ symbol: 'none' }}
-              // padding="20,10,10,10"
+              padding="0,0,0,0"
             />
 
             {/* Sidebar Section */}
@@ -152,7 +153,6 @@ function EfxChartsDemo() {
                 type: 'time',
                 axisLabel: { hideOverlap: true },
               }}
-              // padding="30,10,10,10"
             />
 
             {/* Main Content Area */}
@@ -166,7 +166,6 @@ function EfxChartsDemo() {
               data={data.main}
               xAxis={{ type: 'time' }}
               series={{ symbol: 'none' }}
-              // padding="50,10,10,10"
             />
 
             {/* Footer Section */}
@@ -177,7 +176,6 @@ function EfxChartsDemo() {
               data={data.footer}
               xAxis={{ type: 'time' }}
               yAxis={{ splitNumber: 2 }}
-              // padding="50,20,10,20"
             />
           </EfxChartsLayout>
         </LayoutItem>
