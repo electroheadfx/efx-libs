@@ -171,7 +171,7 @@ function buildXAxis(
     min: axis?.min,
     max: axis?.max,
     splitNumber: axis?.splitNumber,
-    splitLine: axis?.splitLine ?? { show: true, lineStyle: { color: "#333" } },
+    splitLine: axis?.splitLine ?? { show: false },
     axisLine: axis?.axisLine ?? { lineStyle: { color: "#666" } },
     axisLabel: {
       show: axis?.axisLabel?.show ?? true,
@@ -203,7 +203,7 @@ function buildYAxis(
     min: axis?.min,
     max: axis?.max,
     splitNumber: axis?.splitNumber,
-    splitLine: axis?.splitLine ?? { show: true, lineStyle: { color: "#333" } },
+    splitLine: axis?.splitLine ?? { show: false },
     axisLine: axis?.axisLine ?? { lineStyle: { color: "#666" } },
     axisLabel: {
       show: axis?.axisLabel?.show ?? true,
