@@ -58,7 +58,6 @@ function extractChartProps(children: React.ReactNode): EfxChartProps[] {
 export function EfxChartsLayout({
   template,
   sidebarPosition = 'left',
-  title,
   breakpoints,
   className,
   style,
@@ -96,8 +95,7 @@ export function EfxChartsLayout({
       chartSections,
       desktopLayout.sectionCoordMap,
       desktopLayout.columns,
-      desktopLayout.rows,
-      title
+      desktopLayout.rows
     )
 
     // Add media queries for responsive behavior
@@ -109,13 +107,11 @@ export function EfxChartsLayout({
       mobileMaxWidth
     )
 
-    // Return as unknown first to bypass strict ECharts type checking
-    // ECharts accepts media queries but the type definitions are strict
     return {
       ...baseOption,
       media,
     } as unknown as import('./core').EChartsCoreOption
-  }, [chartSections, desktopLayout, mobileLayout, title, breakpoints])
+  }, [chartSections, desktopLayout, mobileLayout, breakpoints])
 
   // Handle chart ready callback
   const handleReady = useMemo(() => {

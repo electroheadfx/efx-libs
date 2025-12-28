@@ -325,9 +325,6 @@ export interface EfxChartsLayoutProps {
   /** Sidebar position for templates with sidebar sections */
   sidebarPosition?: "left" | "right"
 
-  /** Dashboard title (rendered in ECharts) */
-  title?: string
-
   /** Custom breakpoints for responsive behavior */
   breakpoints?: {
     mobile?: { maxWidth: number }

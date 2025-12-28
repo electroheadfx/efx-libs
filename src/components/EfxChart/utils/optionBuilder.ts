@@ -345,7 +345,6 @@ export function buildEChartsOption(
   sectionCoordMap: SectionCoordMap,
   columns: number,
   rows: number,
-  dashboardTitle?: string,
 ): EChartsCoreOption {
   const percentages = coordsToPercentages(sectionCoordMap, columns, rows)
 
@@ -359,16 +358,6 @@ export function buildEChartsOption(
   let gridIndex = 0
   // Track axis index separately since only chart sections get axes
   let axisIndex = 0
-
-  // Add dashboard title if provided
-  if (dashboardTitle) {
-    titles.push({
-      text: dashboardTitle,
-      left: "center",
-      top: 10,
-      textStyle: { color: "#aaa", fontSize: 16 },
-    })
-  }
 
   // Process each section
   for (const section of sections) {

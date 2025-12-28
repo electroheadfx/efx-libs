@@ -9,16 +9,15 @@ import type { EfxLayoutTemplate } from "./types"
 /**
  * Finance Dashboard Layout
  * Based on the original finance.js implementation
- * Uses exact section IDs from finance.js reference
+ * Title is handled separately via EfxLayout, not as a chart section
  *
- * Desktop: 4 columns × 10 rows
- * Mobile: 1 column × 10 rows
+ * Desktop: 4 columns × 9 rows
+ * Mobile: 1 column × 9 rows
  */
 export const FINANCE_LAYOUT: EfxLayoutTemplate = {
 	name: "finance",
-	sections: ["section_title_1", "section_header_1", "section_sidebar_1", "section_main_content_area_1", "section_footer_1"] as const,
+	sections: ["section_header_1", "section_sidebar_1", "section_main_content_area_1", "section_footer_1"] as const,
 	mobile: `
-		| section_title_1              |
 		| section_header_1             |
 		| section_header_1             |
 		| section_sidebar_1            |
@@ -30,7 +29,6 @@ export const FINANCE_LAYOUT: EfxLayoutTemplate = {
 		| section_footer_1             |
 	`,
 	desktop: `
-		| section_title_1              | section_title_1              | section_title_1              | section_title_1              |
 		| section_header_1             | section_header_1             | section_header_1             | section_header_1             |
 		| section_header_1             | section_header_1             | section_header_1             | section_header_1             |
 		| section_sidebar_1            | section_main_content_area_1  | section_main_content_area_1  | section_main_content_area_1  |

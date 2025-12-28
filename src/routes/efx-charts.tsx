@@ -13,6 +13,7 @@ import {
   EfxChart,
   EFX_CHART_TEMPLATES,
 } from '../components/EfxChart'
+import { EfxLayout, LayoutItem } from '../components/EfxLayout'
 
 export const Route = createFileRoute('/efx-charts')({
   component: EfxChartsDemo,
@@ -27,7 +28,7 @@ function EfxChartsDemo() {
     'left'
   )
 
-  const template = EFX_CHART_TEMPLATES.finance
+  const efxChartTemplate = EFX_CHART_TEMPLATES.finance
 
   // Generate finance data based on seed
   const data = useMemo(
@@ -52,25 +53,20 @@ function EfxChartsDemo() {
 
   return (
     <div
-      className="bg-rs-body p-6 flex flex-col"
-      style={{ height: 'calc(100vh - 70px)', maxHeight: 'calc(100vh - 70px)' }}
+      className="bg-rs-body flex flex-col"
+      style={{ height: 'calc(100vh - 70px)' }}
     >
-      {/* Header */}
+      {/* Control Panel */}
       <Panel
         bordered
         shaded
-        className="bg-rs-bg-card mb-6"
+        className="bg-rs-bg-card m-6 mb-0"
         style={{ flexShrink: 0 }}
       >
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-rs-heading mb-2">
-              Finance Dashboard
-            </h1>
-            <p className="text-rs-secondary">
-              Matrix-based ECharts layout with responsive design
-            </p>
-          </div>
+          <p className="text-rs-secondary">
+            Matrix-based ECharts layout with responsive design
+          </p>
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-2">
               <span className="text-sm text-rs-secondary whitespace-nowrap">
@@ -107,81 +103,87 @@ function EfxChartsDemo() {
         </div>
       </Panel>
 
-      {/* Finance Layout */}
-      <div
-        className="bg-rs-bg-card border border-rs-border rounded-lg overflow-hidden"
-        style={{ flex: 1, minHeight: 0 }}
+      {/* EfxLayout with Title + Chart Content */}
+      <EfxLayout
+        className="border rounded-lg m-6 h-full"
+        template={{
+          areas: `"title" "content"`,
+          columns: ['1fr'],
+          rows: ['auto', '1fr'],
+          gap: 10,
+          padding: 24,
+        }}
       >
-        <EfxChartsLayout
-          template={template}
-          sidebarPosition={sidebarPosition}
-          onChartReady={handleChartReady}
-          onEvents={handleEvents}
-          title=""
-        >
-          {/* Title Section */}
-          <EfxChart
-            id="section_title_1"
-            title={{
-              text: 'Finance Dashboard',
-              textStyle: { fontSize: 30 },
-            }}
-            padding="0,10,0,10"
-          />
+        {/* Title */}
+        <LayoutItem area="title">
+          <h2>Finances Efx Charts</h2>
+        </LayoutItem>
 
-          {/* Header Section */}
-          <EfxChart
-            id="section_header_1"
-            type="line"
-            title={{ text: 'Header Section', textStyle: { fontSize: 14 } }}
-            data={data.header}
-            xAxis={{ type: 'time', splitLine: { show: false } }}
-            yAxis={{ splitLine: { show: false } }}
-            series={{ symbol: 'none' }}
-            padding="20,10,10,10"
-          />
+        {/* Chart Content Area */}
+        <LayoutItem area="content">
+          <EfxChartsLayout
+            template={efxChartTemplate}
+            sidebarPosition={sidebarPosition}
+            onChartReady={handleChartReady}
+            onEvents={handleEvents}
+          >
+            {/* Header Section */}
+            <EfxChart
+              id="section_header_1"
+              type="line"
+              title={{ text: 'Header Section', textStyle: { fontSize: 14 } }}
+              data={data.header}
+              xAxis={{ type: 'time', splitLine: { show: false } }}
+              yAxis={{ splitLine: { show: false } }}
+              series={{ symbol: 'none' }}
+              padding="20,10,10,10"
+            />
 
-          {/* Sidebar Section */}
-          <EfxChart
-            id="section_sidebar_1"
-            type="bar"
-            title={{ text: 'Sidebar Section', textStyle: { fontSize: 14 } }}
-            data={data.sidebar}
-            xAxis={{
-              type: 'value',
-              splitLine: { show: false },
-              axisLabel: { hideOverlap: true },
-            }}
-            yAxis={{
-              type: 'time',
-              axisLabel: { hideOverlap: true },
-            }}
-            padding="20,10,10,10"
-          />
+            {/* Sidebar Section */}
+            <EfxChart
+              id="section_sidebar_1"
+              type="bar"
+              title={{ text: 'Sidebar Section', textStyle: { fontSize: 14 } }}
+              data={data.sidebar}
+              xAxis={{
+                type: 'value',
+                splitLine: { show: false },
+                axisLabel: { hideOverlap: true },
+              }}
+              yAxis={{
+                type: 'time',
+                axisLabel: { hideOverlap: true },
+              }}
+              padding="30,10,10,10"
+            />
 
-          {/* Main Content Area */}
-          <EfxChart
-            id="section_main_content_area_1"
-            type="line"
-            title={{ text: 'Main Content Area', textStyle: { fontSize: 14 } }}
-            data={data.main}
-            xAxis={{ type: 'time' }}
-            series={{ symbol: 'none' }}
-            padding="50,10,10,10"
-          />
+            {/* Main Content Area */}
+            <EfxChart
+              id="section_main_content_area_1"
+              type="line"
+              title={{
+                text: 'Main Content Area',
+                textStyle: { fontSize: 14 },
+              }}
+              data={data.main}
+              xAxis={{ type: 'time' }}
+              series={{ symbol: 'none' }}
+              padding="50,10,10,10"
+            />
 
-          {/* Footer Section */}
-          <EfxChart
-            id="section_footer_1"
-            type="bar"
-            title={{ text: 'Footer Section', textStyle: { fontSize: 14 } }}
-            data={data.footer}
-            xAxis={{ type: 'time' }}
-            yAxis={{ splitNumber: 2, splitLine: { show: false } }}
-            padding="50,20,10,20"
-          />
-        </EfxChartsLayout>
-      </div>
+            {/* Footer Section */}
+            <EfxChart
+              id="section_footer_1"
+              type="bar"
+              title={{ text: 'Footer Section', textStyle: { fontSize: 14 } }}
+              data={data.footer}
+              xAxis={{ type: 'time' }}
+              yAxis={{ splitNumber: 2, splitLine: { show: false } }}
+              padding="50,20,10,20"
+            />
+          </EfxChartsLayout>
+        </LayoutItem>
+      </EfxLayout>
     </div>
   )
 }
