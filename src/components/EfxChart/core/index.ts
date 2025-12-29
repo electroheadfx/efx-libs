@@ -2,15 +2,13 @@
  * Core Layer Exports
  */
 
+export { EChartsRenderer, type EChartsRendererProps } from "./EChartsRenderer";
 export {
-  useEChartsInstance,
-  echarts,
-  type UseEChartsInstanceOptions,
-  type UseEChartsInstanceReturn,
-  type EChartsType,
-  type EChartsCoreOption,
-} from "./useEChartsInstance"
-
-export { useResizeObserver, useAutoResize } from "./useResizeObserver"
-
-export { EChartsRenderer, type EChartsRendererProps } from "./EChartsRenderer"
+	type EChartsCoreOption,
+	type EChartsType,
+	echarts,
+	type UseEChartsInstanceOptions,
+	type UseEChartsInstanceReturn,
+	useEChartsInstance,
+} from "./useEChartsInstance";
+export { useAutoResize, useResizeObserver } from "./useResizeObserver";

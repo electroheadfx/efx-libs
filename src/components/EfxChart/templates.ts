@@ -4,7 +4,7 @@
  * Human-readable grid definitions for common dashboard patterns.
  */
 
-import type { EfxLayoutTemplate } from "./types"
+import type { EfxLayoutTemplate } from "./types";
 
 /**
  * Finance Dashboard Layout
@@ -16,7 +16,12 @@ import type { EfxLayoutTemplate } from "./types"
  */
 export const FINANCE_LAYOUT: EfxLayoutTemplate = {
 	name: "finance",
-	sections: ["section_header_1", "section_sidebar_1", "section_main_content_area_1", "section_footer_1"] as const,
+	sections: [
+		"section_header_1",
+		"section_sidebar_1",
+		"section_main_content_area_1",
+		"section_footer_1",
+	] as const,
 	mobile: `
 		| section_header_1             |
 		| section_header_1             |
@@ -39,7 +44,7 @@ export const FINANCE_LAYOUT: EfxLayoutTemplate = {
 		| section_sidebar_1            | section_footer_1             | section_footer_1             | section_footer_1             |
 		| section_sidebar_1            | section_footer_1             | section_footer_1             | section_footer_1             |
 	`,
-}
+};
 
 /**
  * Standard Dashboard Layout
@@ -72,7 +77,7 @@ export const DASHBOARD_LAYOUT: EfxLayoutTemplate = {
 		| footer  | footer  | footer  | footer  |
 		| footer  | footer  | footer  | footer  |
 	`,
-}
+};
 
 /**
  * Comparison Layout
@@ -105,7 +110,7 @@ export const COMPARISON_LAYOUT: EfxLayoutTemplate = {
 		| summary | summary | summary | summary |
 		| summary | summary | summary | summary |
 	`,
-}
+};
 
 /**
  * 2x2 Equal Grid Layout
@@ -134,7 +139,7 @@ export const GRID_2X2_LAYOUT: EfxLayoutTemplate = {
 		| bl | bl | br | br |
 		| bl | bl | br | br |
 	`,
-}
+};
 
 /**
  * Analytics Dashboard Layout
@@ -167,7 +172,7 @@ export const ANALYTICS_LAYOUT: EfxLayoutTemplate = {
 		| main | main | main | side |
 		| main | main | main | side |
 	`,
-}
+};
 
 /**
  * Monitoring Layout
@@ -175,7 +180,14 @@ export const ANALYTICS_LAYOUT: EfxLayoutTemplate = {
  */
 export const MONITORING_LAYOUT: EfxLayoutTemplate = {
 	name: "monitoring",
-	sections: ["chart1", "chart2", "chart3", "chart4", "chart5", "chart6"] as const,
+	sections: [
+		"chart1",
+		"chart2",
+		"chart3",
+		"chart4",
+		"chart5",
+		"chart6",
+	] as const,
 	mobile: `
 		| chart1 |
 		| chart2 |
@@ -192,7 +204,7 @@ export const MONITORING_LAYOUT: EfxLayoutTemplate = {
 		| chart4 | chart4 | chart5 | chart5 | chart6 | chart6 |
 		| chart4 | chart4 | chart5 | chart5 | chart6 | chart6 |
 	`,
-}
+};
 
 /**
  * All pre-defined templates
@@ -204,11 +216,11 @@ export const EFX_CHART_TEMPLATES = {
 	grid2x2: GRID_2X2_LAYOUT,
 	analytics: ANALYTICS_LAYOUT,
 	monitoring: MONITORING_LAYOUT,
-} as const
+} as const;
 
-export type EfxChartTemplateName = keyof typeof EFX_CHART_TEMPLATES
+export type EfxChartTemplateName = keyof typeof EFX_CHART_TEMPLATES;
 
 /**
  * Type helper to extract section IDs from a template
  */
-export type SectionId<T extends EfxLayoutTemplate> = T["sections"][number]
+export type SectionId<T extends EfxLayoutTemplate> = T["sections"][number];

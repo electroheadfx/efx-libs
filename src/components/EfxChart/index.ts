@@ -47,97 +47,97 @@
 // Main Components
 // ============================================================================
 
-export { EfxChartsLayout } from "./EfxChartsLayout"
-export { EfxChart, isEfxChart, extractChartProps } from "./EfxChart"
+export { EfxChart, extractChartProps, isEfxChart } from "./EfxChart";
+export { EfxChartsLayout } from "./EfxChartsLayout";
 
 // ============================================================================
 // Templates
 // ============================================================================
 
 export {
-  FINANCE_LAYOUT,
-  DASHBOARD_LAYOUT,
-  COMPARISON_LAYOUT,
-  GRID_2X2_LAYOUT,
-  ANALYTICS_LAYOUT,
-  MONITORING_LAYOUT,
-  EFX_CHART_TEMPLATES,
-  type EfxChartTemplateName,
-  type SectionId,
-} from "./templates"
+	ANALYTICS_LAYOUT,
+	COMPARISON_LAYOUT,
+	DASHBOARD_LAYOUT,
+	EFX_CHART_TEMPLATES,
+	type EfxChartTemplateName,
+	FINANCE_LAYOUT,
+	GRID_2X2_LAYOUT,
+	MONITORING_LAYOUT,
+	type SectionId,
+} from "./templates";
 
 // ============================================================================
 // Core Hooks & Renderer (for advanced usage)
 // ============================================================================
 
 export {
-  useEChartsInstance,
-  useResizeObserver,
-  EChartsRenderer,
-  type EChartsType,
-  type EChartsCoreOption,
-} from "./core"
+	type EChartsCoreOption,
+	EChartsRenderer,
+	type EChartsType,
+	useEChartsInstance,
+	useResizeObserver,
+} from "./core";
 
 // ============================================================================
 // Utilities
 // ============================================================================
 
 export {
-  // Template parsing
-  parseTemplateToLayout,
-  parseLayoutTemplate,
-  mirrorLayoutHorizontally,
-  coordsToPercentages,
-  // Padding parsing
-  parsePadding,
-  paddingToGridPosition,
-  // Option building
-  buildEChartsOption,
-  buildMediaDefinitions,
-  type EfxMediaUnit,
-  // Data generators
-  generateTimeSeriesData,
-  generateCategoryData,
-  generateScatterData,
-  generatePieData,
-  generateMultiSeriesData,
-  generateCandlestickData,
-} from "./utils"
+	// Option building
+	buildEChartsOption,
+	buildMediaDefinitions,
+	coordsToPercentages,
+	type EfxMediaUnit,
+	generateCandlestickData,
+	generateCategoryData,
+	generateMultiSeriesData,
+	generatePieData,
+	generateScatterData,
+	// Data generators
+	generateTimeSeriesData,
+	mirrorLayoutHorizontally,
+	paddingToGridPosition,
+	parseLayoutTemplate,
+	// Padding parsing
+	parsePadding,
+	// Template parsing
+	parseTemplateToLayout,
+} from "./utils";
 
 // ============================================================================
 // Types
 // ============================================================================
 
 export type {
-  // Event types
-  EChartsEventParams,
-  EfxEventHandler,
-  // Padding types
-  EfxPadding,
-  EfxParsedPadding,
-  // Axis types
-  EfxAxisOption,
-  // Series types
-  EfxSeriesOption,
-  // Emphasis types
-  EfxEmphasisOption,
-  // Title types
-  EfxTitleOption,
-  // Chart types
-  EfxChartType,
-  // Layout types
-  EfxLayoutTemplate,
-  MatrixCoord,
-  SectionCoordValue,
-  SectionCoordMap,
-  ParsedLayout,
-  // Component props
-  EfxChartProps,
-  EfxChartsLayoutProps,
-  // Hook types
-  UseEChartsOptions,
-  UseEChartsReturn,
-  // Re-exports
-  ECharts,
-  EChartsOption,
-} from "./types"
+	// Re-exports
+	ECharts,
+	// Event types
+	EChartsEventParams,
+	EChartsOption,
+	// Axis types
+	EfxAxisOption,
+	// Component props
+	EfxChartProps,
+	EfxChartsLayoutProps,
+	// Chart types
+	EfxChartType,
+	// Emphasis types
+	EfxEmphasisOption,
+	EfxEventHandler,
+	// Layout types
+	EfxLayoutTemplate,
+	// Padding types
+	EfxPadding,
+	EfxParsedPadding,
+	// Series types
+	EfxSeriesOption,
+	// Title types
+	EfxTitleOption,
+	MatrixCoord,
+	ParsedLayout,
+	SectionCoordMap,
+	SectionCoordValue,
+	// Hook types
+	UseEChartsOptions,
+	UseEChartsReturn,
+} from "./types";

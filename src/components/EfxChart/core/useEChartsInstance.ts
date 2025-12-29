@@ -3,56 +3,25 @@
  *
  * Core hook for ECharts lifecycle management.
  * Provides same event API as echarts-for-react with additional flexibility.
+ *
+ * IMPORTANT: Uses full ECharts import to include matrix coordinate system
+ * which is required for the finance.js-style layout positioning.
  */
 
-import { useRef, useEffect, useCallback, type RefObject } from "react"
-import * as echarts from "echarts/core"
-import { CanvasRenderer, SVGRenderer } from "echarts/renderers"
-import {
-  GridComponent,
-  TooltipComponent,
-  TitleComponent,
-  LegendComponent,
-  DataZoomComponent,
-  ToolboxComponent,
-  MarkLineComponent,
-  MarkPointComponent,
-} from "echarts/components"
-import {
-  LineChart,
-  BarChart,
-  PieChart,
-  ScatterChart,
-  CandlestickChart,
-  HeatmapChart,
-} from "echarts/charts"
-import type { EChartsType, EChartsCoreOption } from "echarts/core"
+import type {
+  EChartsOption as EChartsCoreOption,
+  ECharts as EChartsType,
+} from "echarts"
+// Use full ECharts import to include matrix coordinate system
+// The modular imports don't include the matrix feature
+import * as echarts from "echarts"
+import { type RefObject, useCallback, useEffect, useRef } from "react"
 
 /** Event handler for useEChartsInstance (uses core EChartsType) */
 type CoreEventHandler = (
   params: Record<string, unknown>,
   chart: EChartsType,
 ) => void
-
-// Register ECharts components
-echarts.use([
-  CanvasRenderer,
-  SVGRenderer,
-  GridComponent,
-  TooltipComponent,
-  TitleComponent,
-  LegendComponent,
-  DataZoomComponent,
-  ToolboxComponent,
-  MarkLineComponent,
-  MarkPointComponent,
-  LineChart,
-  BarChart,
-  PieChart,
-  ScatterChart,
-  CandlestickChart,
-  HeatmapChart,
-])
 
 /**
  * Core hook for managing ECharts instance lifecycle

@@ -302,8 +302,34 @@ export interface EfxChartProps {
   /** Emphasis state styling */
   emphasis?: EfxEmphasisOption
 
-  /** Tooltip configuration */
-  tooltip?: { trigger?: "item" | "axis"; formatter?: string }
+  /**
+   * Axis pointer (crosshair) configuration for this chart's grid
+   * Applied to grid.tooltip.axisPointer to maintain tooltip isolation
+   * - `type`: 'line' (x only), 'cross' (x and y), 'shadow', 'none'
+   * - `label`: { show: true } to display value labels on axes
+   * - `snap`: true to snap crosshair to data points (shows actual values)
+   */
+  axisPointer?: {
+    type?: "line" | "cross" | "shadow" | "none"
+    snap?: boolean
+    label?: { show?: boolean; precision?: number | "auto" }
+    lineStyle?: { color?: string; width?: number; type?: "solid" | "dashed" | "dotted" }
+    shadowStyle?: { color?: string; opacity?: number }
+    crosshairStyle?: { color?: string; width?: number; type?: "solid" | "dashed" | "dotted" }
+  }
+
+  /**
+   * Tooltip configuration
+   * - `show`: false to disable tooltip for this section
+   * - `trigger`: 'item' | 'axis' (default from global)
+   * - `simple`: true for simplified format (series: value only, no redundant date/category)
+   */
+  tooltip?: {
+    show?: boolean
+    trigger?: "item" | "axis"
+    simple?: boolean
+    formatter?: string | ((params: unknown) => string)
+  }
 
   // ===== ANIMATION =====
 

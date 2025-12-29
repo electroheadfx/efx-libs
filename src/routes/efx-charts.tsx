@@ -170,18 +170,14 @@ function EfxChartsDemo() {
                     data={data.header}
                     xAxis={{
                       type: 'time',
-                      axisPointer: {
-                        show: true,
-                        type: 'line',
-                        label: { show: true },
-                      },
                     }}
                     yAxis={{
-                      axisPointer: {
-                        show: true,
-                        type: 'line',
-                        label: { show: true },
-                      },
+                      splitNumber: 2,
+                    }}
+                    axisPointer={{
+                      type: 'cross',
+                      label: { show: true },
+                      snap: true,
                     }}
                     series={{ symbol: 'none' }}
                     padding="0,0,0,0"
@@ -198,11 +194,6 @@ function EfxChartsDemo() {
                     data={data.sidebar}
                     xAxis={{
                       type: 'value',
-                      axisPointer: {
-                        show: true,
-                        type: 'line',
-                        label: { show: true },
-                      },
                     }}
                     yAxis={{
                       type: 'time',
@@ -220,18 +211,12 @@ function EfxChartsDemo() {
                     data={data.main}
                     xAxis={{
                       type: 'time',
-                      axisPointer: {
-                        show: true,
-                        type: 'line',
-                        label: { show: true },
-                      },
                     }}
-                    yAxis={{
-                      axisPointer: {
-                        show: true,
-                        type: 'line',
-                        label: { show: true },
-                      },
+                    yAxis={{}}
+                    axisPointer={{
+                      type: 'cross',
+                      label: { show: true },
+                      snap: true,
                     }}
                     series={{ symbol: 'none' }}
                   />
