@@ -168,7 +168,21 @@ function EfxChartsDemo() {
                       textStyle: { fontSize: 14 },
                     }}
                     data={data.header}
-                    xAxis={{ type: 'time' }}
+                    xAxis={{
+                      type: 'time',
+                      axisPointer: {
+                        show: true,
+                        type: 'line',
+                        label: { show: true },
+                      },
+                    }}
+                    yAxis={{
+                      axisPointer: {
+                        show: true,
+                        type: 'line',
+                        label: { show: true },
+                      },
+                    }}
                     series={{ symbol: 'none' }}
                     padding="0,0,0,0"
                   />
@@ -184,11 +198,14 @@ function EfxChartsDemo() {
                     data={data.sidebar}
                     xAxis={{
                       type: 'value',
-                      axisLabel: { hideOverlap: true },
+                      axisPointer: {
+                        show: true,
+                        type: 'line',
+                        label: { show: true },
+                      },
                     }}
                     yAxis={{
                       type: 'time',
-                      axisLabel: { hideOverlap: true },
                     }}
                   />
 
@@ -201,7 +218,21 @@ function EfxChartsDemo() {
                       textStyle: { fontSize: 14 },
                     }}
                     data={data.main}
-                    xAxis={{ type: 'time' }}
+                    xAxis={{
+                      type: 'time',
+                      axisPointer: {
+                        show: true,
+                        type: 'line',
+                        label: { show: true },
+                      },
+                    }}
+                    yAxis={{
+                      axisPointer: {
+                        show: true,
+                        type: 'line',
+                        label: { show: true },
+                      },
+                    }}
                     series={{ symbol: 'none' }}
                   />
 
@@ -214,8 +245,12 @@ function EfxChartsDemo() {
                       textStyle: { fontSize: 14 },
                     }}
                     data={data.footer}
-                    xAxis={{ type: 'time' }}
-                    yAxis={{ splitNumber: 2 }}
+                    xAxis={{
+                      type: 'time',
+                    }}
+                    yAxis={{
+                      splitNumber: 2,
+                    }}
                   />
                 </EfxChartsLayout>
               )}

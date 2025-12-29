@@ -185,6 +185,7 @@ function buildXAxis(
       formatter: axis?.axisLabel?.formatter,
     },
     axisTick: axis?.axisTick,
+    ...(axis?.axisPointer && { axisPointer: axis.axisPointer }),
   }
 }
 
@@ -217,6 +218,7 @@ function buildYAxis(
       formatter: axis?.axisLabel?.formatter,
     },
     axisTick: axis?.axisTick,
+    ...(axis?.axisPointer && { axisPointer: axis.axisPointer }),
   }
 }
 
@@ -461,7 +463,10 @@ export function buildEChartsOption(
     series,
     tooltip: {
       trigger: "axis",
-      axisPointer: { type: "cross" },
+      axisPointer: {
+        type: "none",
+        label: { show: false },
+      },
     },
   }
 

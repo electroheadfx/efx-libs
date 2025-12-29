@@ -86,6 +86,12 @@ export interface EfxAxisOption {
     formatter?: string | ((value: unknown) => string)
   }
   axisTick?: { show?: boolean }
+  /** Axis pointer configuration (per-axis: line/shadow/none only, 'cross' is tooltip-level only) */
+  axisPointer?: {
+    show?: boolean
+    type?: "line" | "shadow" | "none"
+    label?: { show?: boolean }
+  }
   [key: string]: unknown
 }
 
