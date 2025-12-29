@@ -3,19 +3,44 @@
  *
  * Demonstrates the EfxCharts component with the finance layout
  * matching the finance.js reference implementation.
+ * Uses deferred server-side data loading with streaming via TanStack Router.
+ * Seed is driven by URL search params for shareability.
  */
 
-import { createFileRoute } from '@tanstack/react-router'
-import { useState, useMemo } from 'react'
-import { Panel, Button, ButtonGroup } from 'rsuite'
+import {
+  createFileRoute,
+  defer,
+  Await,
+  useNavigate,
+} from '@tanstack/react-router'
+import { useState, Suspense } from 'react'
+import { Panel, Button, ButtonGroup, Loader } from 'rsuite'
 import {
   EfxChartsLayout,
   EfxChart,
   EFX_CHART_TEMPLATES,
 } from '../components/EfxChart'
 import { EfxLayout, LayoutItem } from '../components/EfxLayout'
+import { getEfxChartsData } from '../serverActions/efxChartsActions'
 
 export const Route = createFileRoute('/efx-charts')({
+  // Validate and parse search params with defaults
+  validateSearch: (search: Record<string, unknown>) => ({
+    seed: Number(search.seed) || 42,
+  }),
+
+  // Loader re-runs automatically when these deps change
+  loaderDeps: ({ search }) => ({
+    seed: search.seed,
+  }),
+
+  // Deferred data loading with seed from search params
+  loader: async ({ deps }) => {
+    return {
+      dataPromise: defer(getEfxChartsData({ data: { seed: deps.seed } })),
+    }
+  },
+
   component: EfxChartsDemo,
 })
 
@@ -23,23 +48,23 @@ export const Route = createFileRoute('/efx-charts')({
  * Finance Dashboard Demo
  */
 function EfxChartsDemo() {
-  const [seed, setSeed] = useState(42)
+  // Get deferred data promise from loader
+  const { dataPromise } = Route.useLoaderData()
+  const { seed } = Route.useSearch()
+  const navigate = useNavigate({ from: Route.fullPath })
+
   const [sidebarPosition, setSidebarPosition] = useState<'left' | 'right'>(
     'left'
   )
 
   const efxChartTemplate = EFX_CHART_TEMPLATES.finance
 
-  // Generate finance data based on seed
-  const data = useMemo(
-    () => ({
-      header: generateSingleSeriesData(100, false, seed),
-      sidebar: generateSingleSeriesData(10, true, seed + 100),
-      main: generateSingleSeriesData(100, false, seed + 200),
-      footer: generateSingleSeriesData(10, false, seed + 300),
-    }),
-    [seed]
-  )
+  // Handle randomize - just update URL, loader handles the rest
+  const handleRandomize = () => {
+    navigate({
+      search: { seed: Math.floor(Math.random() * 100000) },
+    })
+  }
 
   const handleChartReady = (chart: import('echarts').ECharts) => {
     console.log('EfxChartsLayout ready:', chart)
@@ -93,11 +118,8 @@ function EfxChartsDemo() {
                 </Button>
               </ButtonGroup>
             </div>
-            <Button
-              appearance="primary"
-              onClick={() => setSeed(Math.floor(Math.random() * 100000))}
-            >
-              🎲 Randomize
+            <Button appearance="primary" onClick={handleRandomize}>
+              🎲 Randomize (seed: {seed})
             </Button>
           </div>
         </div>
@@ -119,117 +141,90 @@ function EfxChartsDemo() {
           <h2>Finances Efx Charts</h2>
         </LayoutItem>
 
-        {/* Chart Content Area */}
+        {/* Chart Content Area - with Suspense for deferred data */}
         <LayoutItem area="content">
-          <EfxChartsLayout
-            template={efxChartTemplate}
-            sidebarPosition={sidebarPosition}
-            gap={20}
-            onChartReady={handleChartReady}
-            onEvents={handleEvents}
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center h-full">
+                <Loader size="lg" content="Loading charts..." vertical />
+              </div>
+            }
           >
-            {/* Header Section */}
-            <EfxChart
-              id="section_header_1"
-              type="line"
-              title={{ text: 'Header Section', textStyle: { fontSize: 14 } }}
-              data={data.header}
-              xAxis={{ type: 'time' }}
-              series={{ symbol: 'none' }}
-              padding="0,0,0,0"
-            />
+            <Await promise={dataPromise}>
+              {(data) => (
+                <EfxChartsLayout
+                  template={efxChartTemplate}
+                  sidebarPosition={sidebarPosition}
+                  gap={20}
+                  onChartReady={handleChartReady}
+                  onEvents={handleEvents}
+                >
+                  {/* Header Section */}
+                  <EfxChart
+                    id="section_header_1"
+                    type="line"
+                    title={{
+                      text: 'Header Section',
+                      textStyle: { fontSize: 14 },
+                    }}
+                    data={data.header}
+                    xAxis={{ type: 'time' }}
+                    series={{ symbol: 'none' }}
+                    padding="0,0,0,0"
+                  />
 
-            {/* Sidebar Section */}
-            <EfxChart
-              id="section_sidebar_1"
-              type="bar"
-              title={{ text: 'Sidebar Section', textStyle: { fontSize: 14 } }}
-              data={data.sidebar}
-              xAxis={{
-                type: 'value',
-                axisLabel: { hideOverlap: true },
-              }}
-              yAxis={{
-                type: 'time',
-                axisLabel: { hideOverlap: true },
-              }}
-            />
+                  {/* Sidebar Section */}
+                  <EfxChart
+                    id="section_sidebar_1"
+                    type="bar"
+                    title={{
+                      text: 'Sidebar Section',
+                      textStyle: { fontSize: 14 },
+                    }}
+                    data={data.sidebar}
+                    xAxis={{
+                      type: 'value',
+                      axisLabel: { hideOverlap: true },
+                    }}
+                    yAxis={{
+                      type: 'time',
+                      axisLabel: { hideOverlap: true },
+                    }}
+                  />
 
-            {/* Main Content Area */}
-            <EfxChart
-              id="section_main_content_area_1"
-              type="line"
-              title={{
-                text: 'Main Content Area',
-                textStyle: { fontSize: 14 },
-              }}
-              data={data.main}
-              xAxis={{ type: 'time' }}
-              series={{ symbol: 'none' }}
-            />
+                  {/* Main Content Area */}
+                  <EfxChart
+                    id="section_main_content_area_1"
+                    type="line"
+                    title={{
+                      text: 'Main Content Area',
+                      textStyle: { fontSize: 14 },
+                    }}
+                    data={data.main}
+                    xAxis={{ type: 'time' }}
+                    series={{ symbol: 'none' }}
+                  />
 
-            {/* Footer Section */}
-            <EfxChart
-              id="section_footer_1"
-              type="bar"
-              title={{ text: 'Footer Section', textStyle: { fontSize: 14 } }}
-              data={data.footer}
-              xAxis={{ type: 'time' }}
-              yAxis={{ splitNumber: 2 }}
-            />
-          </EfxChartsLayout>
+                  {/* Footer Section */}
+                  <EfxChart
+                    id="section_footer_1"
+                    type="bar"
+                    title={{
+                      text: 'Footer Section',
+                      textStyle: { fontSize: 14 },
+                    }}
+                    data={data.footer}
+                    xAxis={{ type: 'time' }}
+                    yAxis={{ splitNumber: 2 }}
+                  />
+                </EfxChartsLayout>
+              )}
+            </Await>
+          </Suspense>
         </LayoutItem>
       </EfxLayout>
     </div>
   )
-}
-
-/**
- * Generate time-based series data matching finance.js generateSingleSeriesData
- */
-function generateSingleSeriesData(
-  dayCount: number,
-  inverseXY: boolean,
-  seed: number
-): Array<[string | number, string | number]> {
-  const dayStart = new Date('2025-05-05T00:00:00.000Z')
-  const timeStart = dayStart.getTime()
-  const sevenDay = 7 * 1000 * 3600 * 24
-  const seriesData: Array<[string | number, string | number]> = []
-
-  let localSeed = seed
-  const seededRandom = () => {
-    const x = Math.sin(localSeed++) * 10000
-    return x - Math.floor(x)
-  }
-
-  let lastVal = Math.round(seededRandom() * 300)
-  let turnCount: number | null = null
-  let sign = -1
-
-  for (let idx = 0; idx < dayCount; idx++) {
-    if (turnCount === null || idx >= turnCount) {
-      turnCount =
-        idx + Math.round((dayCount / 4) * ((seededRandom() - 0.5) * 0.1))
-      sign = -sign
-    }
-    const deltaMag = 50
-    const delta = Math.round(
-      seededRandom() * deltaMag - deltaMag / 2 + (sign * deltaMag) / 3
-    )
-    const val = Math.max(0, (lastVal += delta))
-    const xTime = timeStart + idx * sevenDay
-    const year = new Date(xTime).getFullYear()
-    const month = String(new Date(xTime).getMonth() + 1).padStart(2, '0')
-    const day = String(new Date(xTime).getDate()).padStart(2, '0')
-    const dataXVal = `${year}-${month}-${day}`
-    const item: [string | number, string | number] = [dataXVal, val]
-    if (inverseXY) {
-      item.reverse()
-    }
-    seriesData.push(item)
-  }
-  return seriesData
 }
 
 export default EfxChartsDemo
