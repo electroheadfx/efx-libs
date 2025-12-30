@@ -47,8 +47,32 @@
 // Main Components
 // ============================================================================
 
-export { EfxChart, extractChartProps, isEfxChart } from "./EfxChart";
-export { EfxChartsLayout } from "./EfxChartsLayout";
+import { EfxChart } from "./EfxChart"
+import type { EfxChartProps, EfxLayoutTemplate, ExtractSections } from "./types"
+
+export { EfxChart, extractChartProps, isEfxChart } from "./EfxChart"
+export { EfxChartsLayout } from "./EfxChartsLayout"
+
+// ============================================================================
+// Type-Safe Chart Factory
+// ============================================================================
+
+/**
+ * Create a typed EfxChart component for a specific template.
+ * This enables TypeScript autocomplete for section names.
+ *
+ * @example
+ * ```tsx
+ * const EfxChart = createTypedChart(FINANCE_LAYOUT)
+ *
+ * <EfxChartsLayout template={FINANCE_LAYOUT}>
+ *   <EfxChart section="header" />  // ← Autocomplete: "header" | "sidebar" | "main" | "footer"
+ * </EfxChartsLayout>
+ * ```
+ */
+export function createTypedChart<T extends EfxLayoutTemplate>(_template: T) {
+	return EfxChart as React.FC<EfxChartProps<ExtractSections<T>>>
+}
 
 // ============================================================================
 // Templates
@@ -64,7 +88,7 @@ export {
 	GRID_2X2_LAYOUT,
 	MONITORING_LAYOUT,
 	type SectionId,
-} from "./templates";
+} from "./templates"
 
 // ============================================================================
 // Core Hooks & Renderer (for advanced usage)
@@ -76,7 +100,7 @@ export {
 	type EChartsType,
 	useEChartsInstance,
 	useResizeObserver,
-} from "./core";
+} from "./core"
 
 // ============================================================================
 // Utilities
@@ -102,7 +126,7 @@ export {
 	parsePadding,
 	// Template parsing
 	parseTemplateToLayout,
-} from "./utils";
+} from "./utils"
 
 // ============================================================================
 // Types
@@ -126,6 +150,8 @@ export type {
 	EfxEventHandler,
 	// Layout types
 	EfxLayoutTemplate,
+	// Type utility for extracting section names
+	ExtractSections,
 	// Padding types
 	EfxPadding,
 	EfxParsedPadding,
@@ -140,4 +166,4 @@ export type {
 	// Hook types
 	UseEChartsOptions,
 	UseEChartsReturn,
-} from "./types";
+} from "./types"

@@ -234,11 +234,11 @@ export interface ParsedLayout {
 /**
  * EfxChart component props
  */
-export interface EfxChartProps {
+export interface EfxChartProps<TSection extends string = string> {
   // ===== REQUIRED =====
 
-  /** Section ID - must match a name in the ASCII template */
-  id: string
+  /** Section ID - must match a section name in the layout template */
+  section: TSection
 
   // ===== SECTION TITLE =====
 
@@ -350,9 +350,11 @@ export interface EfxChartProps {
 /**
  * EfxChartsLayout component props
  */
-export interface EfxChartsLayoutProps {
+export interface EfxChartsLayoutProps<
+  TTemplate extends EfxLayoutTemplate = EfxLayoutTemplate,
+> {
   /** Layout template (ASCII-based) */
-  template: EfxLayoutTemplate
+  template: TTemplate
 
   /** Sidebar position for templates with sidebar sections */
   sidebarPosition?: "left" | "right"
@@ -438,3 +440,12 @@ export interface UseEChartsReturn {
 // ============================================================================
 
 export type { ECharts, EChartsOption }
+
+// ============================================================================
+// Type Utilities
+// ============================================================================
+
+/**
+ * Extract section IDs from a template as a union type
+ */
+export type ExtractSections<T extends EfxLayoutTemplate> = T["sections"][number]

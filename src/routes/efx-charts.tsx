@@ -17,8 +17,8 @@ import { useState, Suspense } from 'react'
 import { Panel, Button, ButtonGroup, Loader } from 'rsuite'
 import {
   EfxChartsLayout,
-  EfxChart,
   EFX_CHART_TEMPLATES,
+  createTypedChart,
 } from '../components/EfxChart'
 import { EfxLayout, LayoutItem } from '../components/EfxLayout'
 import { getEfxChartsData } from '../serverActions/efxChartsActions'
@@ -57,8 +57,6 @@ function EfxChartsDemo() {
     'left'
   )
 
-  const efxChartTemplate = EFX_CHART_TEMPLATES.finance
-
   // Handle randomize - just update URL, loader handles the rest
   const handleRandomize = () => {
     navigate({
@@ -75,6 +73,10 @@ function EfxChartsDemo() {
       console.log('Chart clicked:', params)
     },
   }
+
+  // Create typed EfxChart for FINANCE_LAYOUT - enables autocomplete on section prop
+  const efxChartTemplate = EFX_CHART_TEMPLATES.finance
+  const EfxChart = createTypedChart(efxChartTemplate)
 
   return (
     <div
@@ -161,7 +163,7 @@ function EfxChartsDemo() {
                 >
                   {/* Header Section */}
                   <EfxChart
-                    id="section_header_1"
+                    section="header"
                     type="line"
                     title={{
                       text: 'Header Section',
@@ -185,7 +187,7 @@ function EfxChartsDemo() {
 
                   {/* Sidebar Section */}
                   <EfxChart
-                    id="section_sidebar_1"
+                    section="sidebar"
                     type="bar"
                     title={{
                       text: 'Sidebar Section',
@@ -202,7 +204,7 @@ function EfxChartsDemo() {
 
                   {/* Main Content Area */}
                   <EfxChart
-                    id="section_main_content_area_1"
+                    section="main"
                     type="line"
                     title={{
                       text: 'Main Content Area',
@@ -212,7 +214,6 @@ function EfxChartsDemo() {
                     xAxis={{
                       type: 'time',
                     }}
-                    yAxis={{}}
                     axisPointer={{
                       type: 'cross',
                       label: { show: true },
@@ -223,7 +224,7 @@ function EfxChartsDemo() {
 
                   {/* Footer Section */}
                   <EfxChart
-                    id="section_footer_1"
+                    section="footer"
                     type="bar"
                     title={{
                       text: 'Footer Section',

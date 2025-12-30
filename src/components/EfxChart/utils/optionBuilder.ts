@@ -317,7 +317,7 @@ function buildSeries(sectionId: string, props: EfxChartProps): object {
  * Build complete ECharts option from EfxChart children and layout
  */
 export function buildEChartsOption(
-  sections: EfxChartProps[],
+  sections: EfxChartProps<string>[],
   sectionCoordMap: SectionCoordMap,
   columns: number,
   rows: number,
@@ -348,7 +348,7 @@ export function buildEChartsOption(
 
   // Process each section
   for (const section of sections) {
-    const sectionPercentages = percentages[section.id]
+    const sectionPercentages = percentages[section.section]
 
     if (!sectionPercentages) continue
 
@@ -361,7 +361,7 @@ export function buildEChartsOption(
     const hasTitle = !!section.title
 
     // Build grid with matrix coordinate system (finance.js pattern)
-    grids.push(buildGrid(section.id, section, padding, hasTitle, gap))
+    grids.push(buildGrid(section.section, section, padding, hasTitle, gap))
 
     // Add title for this section - FINANCE.JS PATTERN
     // coordinateSystem: 'matrix', left: 'center', top: <pixels>
@@ -384,7 +384,7 @@ export function buildEChartsOption(
 
       titles.push({
         ...sectionTitle,
-        id: `title_${section.id}`,
+        id: `title_${section.section}`,
         coordinateSystem: "matrix",
         left: "center",
         top: titleTop,
@@ -394,11 +394,11 @@ export function buildEChartsOption(
     // Only add axes and series if there's a chart type
     if (section.type) {
       // Build axes - ID-based linking (finance.js pattern)
-      xAxes.push(buildXAxis(section.id, section, invertAxis))
-      yAxes.push(buildYAxis(section.id, section, invertAxis))
+      xAxes.push(buildXAxis(section.section, section, invertAxis))
+      yAxes.push(buildYAxis(section.section, section, invertAxis))
 
       // Build series - ID-based linking (finance.js pattern)
-      series.push(buildSeries(section.id, section))
+      series.push(buildSeries(section.section, section))
     }
   }
 
@@ -452,7 +452,7 @@ export function buildMediaDefinitions(
     columns: number
     rows: number
   },
-  sections: EfxChartProps[],
+  sections: EfxChartProps<string>[],
   mobileMaxWidth = 500,
   _gap?: GapConfig,
   _containerSize?: ContainerSize,
@@ -460,19 +460,19 @@ export function buildMediaDefinitions(
   // Build coord-based grid options - FINANCE.JS PATTERN
   const buildGridCoords = (sectionCoordMap: SectionCoordMap) =>
     sections
-      .filter((section) => sectionCoordMap[section.id])
+      .filter((section) => sectionCoordMap[section.section])
       .map((section) => ({
-        id: section.id,
-        coord: sectionCoordMap[section.id],
+        id: section.section,
+        coord: sectionCoordMap[section.section],
       }))
 
   // Build coord-based title options
   const buildTitleCoords = (sectionCoordMap: SectionCoordMap) =>
     sections
-      .filter((s) => s.title && sectionCoordMap[s.id])
+      .filter((s) => s.title && sectionCoordMap[s.section])
       .map((section) => ({
-        id: `title_${section.id}`,
-        coord: sectionCoordMap[section.id],
+        id: `title_${section.section}`,
+        coord: sectionCoordMap[section.section],
       }))
 
   // FINANCE.JS PATTERN: mobile (with query) FIRST, default (no query) LAST
