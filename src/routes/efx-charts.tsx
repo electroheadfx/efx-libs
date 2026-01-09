@@ -37,7 +37,7 @@ export const Route = createFileRoute('/efx-charts')({
   // Deferred data loading with seed from search params
   loader: async ({ deps }) => {
     return {
-      dataPromise: defer(getEfxChartsData({ data: { seed: deps.seed } })),
+      data: defer(getEfxChartsData({ data: { seed: deps.seed } })),
     }
   },
 
@@ -48,8 +48,7 @@ export const Route = createFileRoute('/efx-charts')({
  * Finance Dashboard Demo
  */
 function EfxChartsDemo() {
-  // Get deferred data promise from loader
-  const { dataPromise } = Route.useLoaderData()
+  const { data } = Route.useLoaderData()
   const { seed } = Route.useSearch()
   const navigate = useNavigate({ from: Route.fullPath })
 
@@ -143,7 +142,7 @@ function EfxChartsDemo() {
           <h2>Finances Efx Charts</h2>
         </LayoutItem>
 
-        {/* Chart Content Area - with Suspense for deferred data */}
+        {/* Chart Content Area */}
         <LayoutItem area="content">
           <Suspense
             fallback={
@@ -152,7 +151,7 @@ function EfxChartsDemo() {
               </div>
             }
           >
-            <Await promise={dataPromise}>
+            <Await promise={data}>
               {(data) => (
                 <EfxChartsLayout
                   template={efxChartTemplate}
@@ -161,7 +160,6 @@ function EfxChartsDemo() {
                   onChartReady={handleChartReady}
                   onEvents={handleEvents}
                 >
-                  {/* Header Section */}
                   <EfxChart
                     section="header"
                     type="line"
@@ -170,12 +168,8 @@ function EfxChartsDemo() {
                       textStyle: { fontSize: 14 },
                     }}
                     data={data.header}
-                    xAxis={{
-                      type: 'time',
-                    }}
-                    yAxis={{
-                      splitNumber: 2,
-                    }}
+                    xAxis={{ type: 'time' }}
+                    yAxis={{ splitNumber: 2 }}
                     axisPointer={{
                       type: 'cross',
                       label: { show: true },
@@ -184,8 +178,6 @@ function EfxChartsDemo() {
                     series={{ symbol: 'none' }}
                     padding="0,0,0,0"
                   />
-
-                  {/* Sidebar Section */}
                   <EfxChart
                     section="sidebar"
                     type="bar"
@@ -194,15 +186,9 @@ function EfxChartsDemo() {
                       textStyle: { fontSize: 14 },
                     }}
                     data={data.sidebar}
-                    xAxis={{
-                      type: 'value',
-                    }}
-                    yAxis={{
-                      type: 'time',
-                    }}
+                    xAxis={{ type: 'value' }}
+                    yAxis={{ type: 'time' }}
                   />
-
-                  {/* Main Content Area */}
                   <EfxChart
                     section="main"
                     type="line"
@@ -211,9 +197,7 @@ function EfxChartsDemo() {
                       textStyle: { fontSize: 14 },
                     }}
                     data={data.main}
-                    xAxis={{
-                      type: 'time',
-                    }}
+                    xAxis={{ type: 'time' }}
                     axisPointer={{
                       type: 'cross',
                       label: { show: true },
@@ -221,8 +205,6 @@ function EfxChartsDemo() {
                     }}
                     series={{ symbol: 'none' }}
                   />
-
-                  {/* Footer Section */}
                   <EfxChart
                     section="footer"
                     type="bar"
@@ -231,12 +213,8 @@ function EfxChartsDemo() {
                       textStyle: { fontSize: 14 },
                     }}
                     data={data.footer}
-                    xAxis={{
-                      type: 'time',
-                    }}
-                    yAxis={{
-                      splitNumber: 2,
-                    }}
+                    xAxis={{ type: 'time' }}
+                    yAxis={{ splitNumber: 2 }}
                   />
                 </EfxChartsLayout>
               )}
