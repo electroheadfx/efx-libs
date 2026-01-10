@@ -113,6 +113,9 @@ export function EfxLayout({
  * LayoutItem - Grid area item wrapper
  *
  * Places children in a specific grid area defined in the parent EfxLayout template.
+ *
+ * IMPORTANT: minHeight: 0 and minWidth: 0 are required for grid children
+ * to allow shrinking below their content's intrinsic size in both directions.
  */
 export function LayoutItem({
   area,
@@ -122,7 +125,7 @@ export function LayoutItem({
 }: LayoutItemProps) {
   return (
     <div
-      style={{ gridArea: area, minHeight: 0, ...style }}
+      style={{ gridArea: area, minHeight: 0, minWidth: 0, ...style }}
       className={className}
     >
       {children}

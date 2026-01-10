@@ -78,18 +78,40 @@ function generateSingleSeriesData(
 /**
  * Server function to generate EfxCharts finance data
  * This runs on the server and returns all four data sections
+ * Supports request cancellation via AbortSignal
  */
 export const getEfxChartsData = createServerFn({ method: 'GET' })
-  .inputValidator((data: { seed: number }) => data)
+  .inputValidator((data: { seed: number; signal?: AbortSignal }) => data)
   .handler(async ({ data }): Promise<EfxChartsFinanceData> => {
-    const { seed } = data
+    const { seed, signal } = data
 
     // Validate seed is a valid number
     if (typeof seed !== 'number' || Number.isNaN(seed)) {
       throw new Error('Seed must be a valid number')
     }
-    // add a timeout here
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+
+    // Check if request was cancelled before starting work
+    if (signal?.aborted) {
+      throw new Error('Request cancelled')
+    }
+
+    // Simulate network delay (1s in dev, 0s in production)
+    const DEMO_DELAY = import.meta.env.DEV ? 1000 : 0
+    await new Promise((resolve, reject) => {
+      const timeout = setTimeout(resolve, DEMO_DELAY)
+
+      // Cancel timeout if request is aborted
+      signal?.addEventListener('abort', () => {
+        clearTimeout(timeout)
+        reject(new Error('Request cancelled'))
+      })
+    })
+
+    // Check again after delay
+    if (signal?.aborted) {
+      throw new Error('Request cancelled')
+    }
+
     // Generate all four data sections with different seed offsets
     const financeData: EfxChartsFinanceData = {
       header: generateSingleSeriesData(100, false, seed),
