@@ -29,6 +29,17 @@
   .shadow-rs-lg { box-shadow: var(--rs-shadow-lg); }
 }
 
+/* Prevent flash of wrong theme - set background before React hydrates */
+html[data-theme="dark"] {
+  background-color: #0f131a; /* RSuite dark body color */
+  color-scheme: dark;
+}
+
+html[data-theme="light"] {
+  background-color: #f7f7fa; /* RSuite light body color */
+  color-scheme: light;
+}
+
 /* Base body styles */
 body {
   @apply m-0;
