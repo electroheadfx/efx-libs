@@ -103,6 +103,19 @@ export {
 } from "./core"
 
 // ============================================================================
+// Streaming Hooks
+// ============================================================================
+
+export {
+	useStreamingData,
+	type PlaceholderConfig,
+	type PlaceholderOptions,
+	type PlaceholderType,
+	type UseStreamingDataOptions,
+	type UseStreamingDataReturn,
+} from "./hooks"
+
+// ============================================================================
 // Utilities
 // ============================================================================
 

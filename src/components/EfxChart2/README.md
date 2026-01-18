@@ -61,29 +61,27 @@ function Dashboard() {
 }
 ```
 
-### Streaming Usage (TanStack Start)
+### Streaming Usage with `useStreamingData` Hook (Recommended)
 
-For streaming data where each section loads independently:
+The `useStreamingData` hook simplifies streaming data management by handling state, loading states, and placeholder generation automatically:
 
 ```tsx
 import { createFileRoute, defer } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
-import { useState, useEffect, lazy, Suspense } from 'react'
-import { EFX_CHART_TEMPLATES, createTypedChart } from '@/components/EfxChart2'
+import { lazy, Suspense } from 'react'
+import {
+  EFX_CHART_TEMPLATES,
+  createTypedChart,
+  useStreamingData,
+} from '@/components/EfxChart2'
 
 const EfxChartsLayout = lazy(() => import('@/components/EfxChart2/EfxChartsLayout'))
 
-// 1. Define per-section server functions with staggered delays
+// 1. Define per-section server functions
 const getHeaderData = createServerFn({ method: 'GET' })
   .handler(async () => {
-    await delay(500)  // Simulated API call
-    return fetchHeaderData()
-  })
-
-const getSidebarData = createServerFn({ method: 'GET' })
-  .handler(async () => {
-    await delay(1500)
-    return fetchSidebarData()
+    await delay(500)
+    return { data: fetchHeaderData(), loadTime: 500 }
   })
 
 // 2. Route loader uses defer() for each section
@@ -97,7 +95,75 @@ export const Route = createFileRoute('/dashboard')({
   component: StreamingDashboard,
 })
 
-// 3. Component uses promise.then() for true streaming
+// Section names constant
+const SECTIONS = ['header', 'sidebar', 'main', 'footer'] as const
+
+// 3. Component uses useStreamingData hook
+function StreamingDashboard() {
+  const loaderData = Route.useLoaderData()
+
+  // ✨ One hook handles everything!
+  const { chartData, sectionLoadingStates, reset, loadTimes, allLoaded } =
+    useStreamingData({
+      loaderData,
+      sections: SECTIONS,
+      placeholder: {
+        type: 'timeseries',  // 'timeseries' | 'category' | 'numeric'
+        count: 50,           // Default data points
+        overrides: {
+          sidebar: { count: 10 },  // Smaller placeholder for sidebar
+          footer: { count: 10 },
+        },
+      },
+      onSectionLoad: (section, data) => {
+        console.log(`${section} loaded in ${data.loadTime}ms`)
+      },
+    })
+
+  const template = EFX_CHART_TEMPLATES.finance
+  const EfxChart = createTypedChart(template)
+
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <EfxChartsLayout
+        template={template}
+        loadingStrategy="streaming"
+        sectionLoadingStates={sectionLoadingStates}
+        gap={20}
+      >
+        <EfxChart section="header" type="line" data={chartData.header} />
+        <EfxChart section="sidebar" type="bar" data={chartData.sidebar} />
+        <EfxChart section="main" type="line" data={chartData.main} />
+        <EfxChart section="footer" type="bar" data={chartData.footer} />
+      </EfxChartsLayout>
+    </Suspense>
+  )
+}
+```
+
+### Before/After Comparison
+
+| Before (Manual) | After (with Hook) |
+|-----------------|-------------------|
+| ~25 lines of boilerplate | ~15 lines with hook |
+| Manual `useState` for section data | Auto-managed state |
+| Manual `useEffect` for promise handling | Auto-handled promises |
+| Manual loading state calculation | Auto-computed `sectionLoadingStates` |
+| Manual placeholder data definition | Auto-generated placeholders |
+| No reset function | Built-in `reset()` method |
+| No load time tracking | Auto-extracted `loadTimes` |
+
+### Streaming Usage (Manual - Legacy)
+
+For manual control without the hook:
+
+```tsx
+import { createFileRoute, defer } from '@tanstack/react-router'
+import { useState, useEffect, lazy, Suspense } from 'react'
+import { EFX_CHART_TEMPLATES, createTypedChart } from '@/components/EfxChart2'
+
+const EfxChartsLayout = lazy(() => import('@/components/EfxChart2/EfxChartsLayout'))
+
 function StreamingDashboard() {
   const loaderData = Route.useLoaderData()
   const [sectionData, setSectionData] = useState({})
@@ -120,26 +186,7 @@ function StreamingDashboard() {
     footer: !sectionData.footer,
   }
 
-  const template = EFX_CHART_TEMPLATES.finance
-  const EfxChart = createTypedChart(template)
-
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <EfxChartsLayout
-        template={template}
-        loadingStrategy="streaming"
-        sectionLoadingStates={sectionLoadingStates}
-        gap={20}
-      >
-        <EfxChart
-          section="header"
-          type="line"
-          data={sectionData.header?.data ?? placeholderData}
-        />
-        {/* ... other sections */}
-      </EfxChartsLayout>
-    </Suspense>
-  )
+  // ... render with manual placeholder handling
 }
 ```
 
@@ -186,6 +233,42 @@ function StreamingDashboard() {
 | `series` | `EfxSeriesOption` | - | Series configuration |
 | `padding` | `string \| number \| object` | - | Inner padding (e.g., `"50,20"`) |
 | `axisPointer` | `object` | - | Axis pointer (crosshair) config |
+
+### useStreamingData Hook
+
+Simplifies streaming data management for EfxChart2 components.
+
+#### Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `loaderData` | `Record<string, Promise<T>>` | required | Deferred promises from TanStack Router loader |
+| `sections` | `readonly string[]` | required | Section names to track |
+| `placeholder` | `PlaceholderOptions` | - | Auto-generate placeholder configuration |
+| `placeholder.type` | `'timeseries' \| 'category' \| 'numeric'` | `'timeseries'` | Placeholder data type |
+| `placeholder.count` | `number` | `50` | Number of placeholder data points |
+| `placeholder.overrides` | `Record<string, PlaceholderConfig>` | - | Per-section overrides |
+| `customPlaceholders` | `Record<string, unknown>` | - | Custom placeholder data per section |
+| `onSectionLoad` | `(section: string, data: T) => void` | - | Callback when a section loads |
+
+#### Return Value
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `sectionData` | `Record<string, T \| undefined>` | Raw resolved data per section |
+| `sectionLoadingStates` | `Record<string, boolean>` | Loading state per section (`true` = loading) |
+| `chartData` | `Record<string, TData>` | Data with placeholders applied (safe to render) |
+| `reset` | `() => void` | Reset all section data (call on navigation) |
+| `allLoaded` | `boolean` | `true` if all sections have loaded |
+| `loadTimes` | `Record<string, number \| undefined>` | Load time per section (if data includes `loadTime`) |
+
+#### Placeholder Types
+
+| Type | Format | Example |
+|------|--------|---------|
+| `timeseries` | `['YYYY-MM-DD', value]` | `['2025-01-15', 100]` |
+| `category` | `['Category N', value]` | `['Category 1', 100]` |
+| `numeric` | `[index, value]` | `[0, 100]` |
 
 ## Creating Custom Templates
 

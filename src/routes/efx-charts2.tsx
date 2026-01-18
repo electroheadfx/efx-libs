@@ -7,9 +7,13 @@
 
 import { createFileRoute, defer, useNavigate } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
-import { useState, useEffect, lazy, Suspense } from 'react'
+import { useState, lazy, Suspense } from 'react'
 import { Panel, Button, ButtonGroup } from 'rsuite'
-import { EFX_CHART_TEMPLATES, createTypedChart } from '../components/EfxChart2'
+import {
+  EFX_CHART_TEMPLATES,
+  createTypedChart,
+  useStreamingData,
+} from '../components/EfxChart2'
 import { EfxLayout, LayoutItem } from '../components/EfxLayout'
 import { ChartLoadingFallback } from '../components/route-states'
 import type { TimeSeriesDataPoint } from '../serverActions/efxChartsActions'
@@ -152,15 +156,6 @@ export const Route = createFileRoute('/efx-charts2')({
 })
 
 // ============================================================================
-// Placeholder data for loading state
-// ============================================================================
-
-const placeholderData: TimeSeriesDataPoint[] = Array.from(
-  { length: 50 },
-  (_, i) => [`2025-01-${String(i + 1).padStart(2, '0')}`, 100]
-)
-
-// ============================================================================
 // Main Component
 // ============================================================================
 
@@ -172,6 +167,9 @@ function EfxCharts2Demo() {
   )
 }
 
+// Section names for streaming
+const SECTIONS = ['header', 'sidebar', 'main', 'footer'] as const
+
 function EfxCharts2Content() {
   const loaderData = Route.useLoaderData() as StreamingLoaderData
   const { seed } = Route.useSearch()
@@ -181,45 +179,30 @@ function EfxCharts2Content() {
     'left'
   )
 
-  // Track resolved data for each section
-  const [sectionData, setSectionData] = useState<Record<string, SectionData>>(
-    {}
-  )
-
-  // Listen to each deferred promise independently using .then()
-  useEffect(() => {
-    const sections = ['header', 'sidebar', 'main', 'footer'] as const
-    sections.forEach((section) => {
-      loaderData[section].then((data) => {
+  // ✨ Use the streaming data hook - handles state, loading, and placeholders
+  const { chartData, sectionLoadingStates, reset, loadTimes } =
+    useStreamingData<SectionData, TimeSeriesDataPoint[]>({
+      loaderData: loaderData as unknown as Record<string, Promise<SectionData>>,
+      sections: SECTIONS,
+      placeholder: {
+        type: 'timeseries',
+        count: 50,
+        overrides: {
+          sidebar: { count: 10 },
+          footer: { count: 10 },
+        },
+      },
+      onSectionLoad: (section, data) => {
         console.log(`[CLIENT] ${section} resolved:`, data)
-        setSectionData((prev) => ({ ...prev, [section]: data }))
-      })
+      },
     })
-  }, [loaderData])
 
   // Handle randomize - just update URL, loader handles the rest
   const handleRandomize = () => {
-    // Reset section data when randomizing
-    setSectionData({})
+    reset()
     navigate({
       search: { seed: Math.floor(Math.random() * 100000) },
     })
-  }
-
-  // Calculate loading states for each section
-  const sectionLoadingStates = {
-    header: !sectionData.header,
-    sidebar: !sectionData.sidebar,
-    main: !sectionData.main,
-    footer: !sectionData.footer,
-  }
-
-  // Get chart data (use placeholder if not loaded)
-  const chartData = {
-    header: sectionData.header?.data ?? placeholderData,
-    sidebar: sectionData.sidebar?.data ?? placeholderData.slice(0, 10),
-    main: sectionData.main?.data ?? placeholderData,
-    footer: sectionData.footer?.data ?? placeholderData.slice(0, 10),
   }
 
   // Create typed EfxChart for FINANCE_LAYOUT
@@ -364,13 +347,11 @@ function EfxCharts2Content() {
       <Panel bordered shaded className="bg-rs-bg-card mx-6 mb-6">
         <h3 className="font-semibold mb-2">Load Status</h3>
         <div className="grid grid-cols-4 gap-4 text-sm">
-          {(['header', 'sidebar', 'main', 'footer'] as const).map((section) => (
+          {SECTIONS.map((section) => (
             <div key={section}>
               <span className="font-medium">{section}: </span>
-              {sectionData[section] ? (
-                <span className="text-green-500">
-                  ✓ {sectionData[section].loadTime}ms
-                </span>
+              {loadTimes[section] !== undefined ? (
+                <span className="text-green-500">✓ {loadTimes[section]}ms</span>
               ) : (
                 <span className="text-yellow-500">Loading...</span>
               )}
