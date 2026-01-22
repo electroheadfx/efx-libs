@@ -19,8 +19,8 @@ import {
   createTypedChart,
   EFX_CHART_TEMPLATES,
   EfxChartsLayout,
-} from '@efx/chart-react'
-import { EfxLayout, LayoutItem } from '@efx/layout-react'
+} from '@efxlab/chart-react'
+import { EfxLayout, LayoutItem } from '@efxlab/layout-react'
 import { ChartLoadingFallback } from '../components/route-states'
 import {
   type EfxChartsFinanceData,
