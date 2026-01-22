@@ -2,7 +2,7 @@
  * useMediaQuery - React hook for responsive breakpoint detection
  */
 import { useEffect, useState } from 'react'
-import type { Breakpoint } from '@efx/layout-core'
+import type { Breakpoint } from '@efxlab/layout-core'
 
 /**
  * Hook for matching a media query

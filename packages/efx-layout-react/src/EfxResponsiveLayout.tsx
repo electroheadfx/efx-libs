@@ -1,8 +1,8 @@
 'use client'
 
 import type { CSSProperties, ReactNode } from 'react'
-import type { ResponsiveTemplates } from '@efx/layout-core'
-import { buildPaddingStyle, normalizeGap } from '@efx/layout-core'
+import type { ResponsiveTemplates } from '@efxlab/layout-core'
+import { buildPaddingStyle, normalizeGap } from '@efxlab/layout-core'
 import { useBreakpoint } from './useMediaQuery'
 
 export interface EfxResponsiveLayoutProps {

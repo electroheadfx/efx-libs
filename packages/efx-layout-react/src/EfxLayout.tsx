@@ -1,8 +1,8 @@
 'use client'
 
 import type { CSSProperties, ReactNode } from 'react'
-import type { LayoutPadding, LayoutTemplate } from '@efx/layout-core'
-import { buildPaddingStyle, normalizeGap } from '@efx/layout-core'
+import type { LayoutPadding, LayoutTemplate } from '@efxlab/layout-core'
+import { buildPaddingStyle, normalizeGap } from '@efxlab/layout-core'
 
 export interface EfxLayoutProps {
   /** Layout template configuration */

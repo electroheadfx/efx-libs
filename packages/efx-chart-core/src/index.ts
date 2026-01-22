@@ -1,5 +1,5 @@
 /**
- * @efx/chart-core
+ * @efxlab/chart-core
  *
  * Framework-agnostic core types, utilities, and templates for the EfxChart system.
  */

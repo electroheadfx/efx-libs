@@ -9,5 +9,5 @@ export default defineConfig({
   splitting: false,
   treeshake: true,
   outDir: 'dist',
-  external: ['react', 'react-dom', '@efx/layout-core'],
+  external: ['react', 'react-dom', '@efxlab/layout-core'],
 })

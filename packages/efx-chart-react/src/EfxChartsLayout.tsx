@@ -14,7 +14,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import type { EfxChartSectionConfig, EfxLayoutTemplate } from '@efx/chart-core'
+import type { EfxChartSectionConfig, EfxLayoutTemplate } from '@efxlab/chart-core'
 import {
   buildEChartsOption,
   buildMediaDefinitions,
@@ -22,7 +22,7 @@ import {
   type GapConfig,
   mirrorLayoutHorizontally,
   parseLayoutTemplate,
-} from '@efx/chart-core'
+} from '@efxlab/chart-core'
 import { type EChartsType, useEChartsInstance } from './core'
 import { useResizeObserver } from './core/useResizeObserver'
 import { EfxChart } from './EfxChart'

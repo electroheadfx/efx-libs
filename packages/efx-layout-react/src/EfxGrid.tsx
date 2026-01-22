@@ -1,7 +1,7 @@
 'use client'
 
 import { Children, type CSSProperties, type ReactNode } from 'react'
-import type { ResponsiveColumns } from '@efx/layout-core'
+import type { ResponsiveColumns } from '@efxlab/layout-core'
 
 export interface EfxGridProps {
   /** Child elements */

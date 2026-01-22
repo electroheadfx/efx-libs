@@ -10,7 +10,7 @@
 
 import { EfxChart } from './EfxChart'
 import type { EfxChartProps } from './types'
-import type { EfxLayoutTemplate, ExtractSections } from '@efx/chart-core'
+import type { EfxLayoutTemplate, ExtractSections } from '@efxlab/chart-core'
 
 export { EfxChart, extractChartProps, isEfxChart } from './EfxChart'
 export { EfxChartsLayout } from './EfxChartsLayout'
@@ -130,4 +130,4 @@ export {
   parsePadding,
   parseLayoutTemplate,
   parseTemplateToLayout,
-} from '@efx/chart-core'
+} from '@efxlab/chart-core'

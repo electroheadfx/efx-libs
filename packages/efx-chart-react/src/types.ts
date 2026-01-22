@@ -10,7 +10,7 @@ import type {
   EfxChartSectionConfig,
   EfxEventHandler,
   EfxLayoutTemplate,
-} from '@efx/chart-core'
+} from '@efxlab/chart-core'
 
 // ============================================================================
 // Component Props Types

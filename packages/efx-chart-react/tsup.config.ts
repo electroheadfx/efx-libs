@@ -9,5 +9,5 @@ export default defineConfig({
   splitting: false,
   treeshake: true,
   outDir: 'dist',
-  external: ['react', 'react-dom', 'echarts', 'rsuite', '@efx/chart-core'],
+  external: ['react', 'react-dom', 'echarts', 'rsuite', '@efxlab/chart-core'],
 })

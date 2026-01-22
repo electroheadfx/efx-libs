@@ -1,5 +1,5 @@
 /**
- * @efx/layout-core
+ * @efxlab/layout-core
  *
  * Framework-agnostic core types, utilities, and presets for the EfxLayout system.
  */

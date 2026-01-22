@@ -36,4 +36,4 @@ export {
   normalizeGap,
   normalizePadding,
   normalizeSize,
-} from '@efx/layout-core'
+} from '@efxlab/layout-core'
