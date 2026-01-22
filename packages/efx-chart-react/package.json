@@ -4,14 +4,14 @@
   "description": "React components for EfxChart - ECharts-based multi-chart dashboards",
   "type": "module",
   "license": "MIT",
-  "author": "EFX Team",
-  "homepage": "https://github.com/user/efx-packages#readme",
+  "author": "Laurent Marques <laurentefx@icloud.com>",
+  "homepage": "https://github.com/electroheadfx/efx-libs#readme",
   "bugs": {
-    "url": "https://github.com/user/efx-packages/issues"
+    "url": "https://github.com/electroheadfx/efx-libs/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/user/efx-packages.git",
+    "url": "git+https://github.com/electroheadfx/efx-libs.git",
     "directory": "packages/efx-chart-react"
   },
   "keywords": ["echarts", "charts", "dashboard", "react", "visualization", "typescript"],
