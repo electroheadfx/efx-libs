@@ -14,7 +14,10 @@ import {
   useRef,
   useState,
 } from 'react'
-import type { EfxChartSectionConfig, EfxLayoutTemplate } from '@efxlab/chart-core'
+import type {
+  EfxChartSectionConfig,
+  EfxLayoutTemplate,
+} from '@efxlab/chart-core'
 import {
   buildEChartsOption,
   buildMediaDefinitions,
@@ -125,7 +128,7 @@ function SectionLoader({
  * according to an ASCII template.
  */
 export function EfxChartsLayout<
-  TTemplate extends EfxLayoutTemplate = EfxLayoutTemplate,
+  TTemplate extends EfxLayoutTemplate = EfxLayoutTemplate
 >({
   template,
   sidebarPosition = 'left',

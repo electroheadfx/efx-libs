@@ -1,4 +1,4 @@
-# TanStack Start Multi-Charts Dashboard
+# EFX Libs
 
 A comprehensive data visualization platform built with TanStack Start, featuring advanced multi-chart ECharts compositions, responsive layouts, and real-time data updates.
 
@@ -105,7 +105,7 @@ See individual package READMEs for detailed documentation:
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd tanstack-start-multi-charts
+cd efx-libs
 
 # Install dependencies
 pnpm install
