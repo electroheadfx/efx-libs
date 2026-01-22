@@ -29,10 +29,10 @@ importers:
       '@echarts-x/custom-violin':
         specifier: ^1.1.0
         version: 1.1.0(echarts@6.0.0)
-      '@efx/chart-react':
+      '@efxlab/chart-react':
         specifier: workspace:*
         version: link:packages/efx-chart-react
-      '@efx/layout-react':
+      '@efxlab/layout-react':
         specifier: workspace:*
         version: link:packages/efx-layout-react
       '@tailwindcss/vite':
@@ -141,7 +141,7 @@ importers:
 
   packages/efx-chart-react:
     dependencies:
-      '@efx/chart-core':
+      '@efxlab/chart-core':
         specifier: workspace:*
         version: link:../efx-chart-core
     devDependencies:
@@ -175,7 +175,7 @@ importers:
 
   packages/efx-layout-react:
     dependencies:
-      '@efx/layout-core':
+      '@efxlab/layout-core':
         specifier: workspace:*
         version: link:../efx-layout-core
     devDependencies:

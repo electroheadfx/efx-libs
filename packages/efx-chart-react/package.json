@@ -1,6 +1,6 @@
 {
   "name": "@efxlab/chart-react",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "React components for EfxChart - ECharts-based multi-chart dashboards",
   "type": "module",
   "license": "MIT",
@@ -14,7 +14,14 @@
     "url": "git+https://github.com/electroheadfx/efx-libs.git",
     "directory": "packages/efx-chart-react"
   },
-  "keywords": ["echarts", "charts", "dashboard", "react", "visualization", "typescript"],
+  "keywords": [
+    "echarts",
+    "charts",
+    "dashboard",
+    "react",
+    "visualization",
+    "typescript"
+  ],
   "exports": {
     ".": {
       "import": {

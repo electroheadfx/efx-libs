@@ -1,6 +1,6 @@
 {
   "name": "@efxlab/layout-react",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "React components for EfxLayout - CSS Grid-based dashboard layouts",
   "type": "module",
   "license": "MIT",
@@ -14,7 +14,13 @@
     "url": "git+https://github.com/electroheadfx/efx-libs.git",
     "directory": "packages/efx-layout-react"
   },
-  "keywords": ["layout", "css-grid", "dashboard", "react", "typescript"],
+  "keywords": [
+    "layout",
+    "css-grid",
+    "dashboard",
+    "react",
+    "typescript"
+  ],
   "exports": {
     ".": {
       "import": {

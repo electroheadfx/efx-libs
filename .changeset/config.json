@@ -4,8 +4,8 @@
   "commit": false,
   "fixed": [],
   "linked": [
-    ["@efx/layout-core", "@efx/layout-react"],
-    ["@efx/chart-core", "@efx/chart-react"]
+    ["@efxlab/layout-core", "@efxlab/layout-react"],
+    ["@efxlab/chart-core", "@efxlab/chart-react"]
   ],
   "access": "public",
   "baseBranch": "main",

@@ -18,8 +18,8 @@
     "changeset:publish": "pnpm build:packages && changeset publish"
   },
   "dependencies": {
-    "@efx/chart-react": "workspace:*",
-    "@efx/layout-react": "workspace:*",
+    "@efxlab/chart-react": "workspace:*",
+    "@efxlab/layout-react": "workspace:*",
     "@echarts-x/custom-bar-range": "^1.2.0",
     "@echarts-x/custom-contour": "^1.2.0",
     "@echarts-x/custom-line-range": "^1.1.0",

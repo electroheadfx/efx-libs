@@ -1,6 +1,6 @@
 {
   "name": "@efxlab/chart-core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Framework-agnostic core types, utilities, and templates for EfxChart",
   "type": "module",
   "license": "MIT",
@@ -14,7 +14,13 @@
     "url": "git+https://github.com/electroheadfx/efx-libs.git",
     "directory": "packages/efx-chart-core"
   },
-  "keywords": ["echarts", "charts", "dashboard", "visualization", "typescript"],
+  "keywords": [
+    "echarts",
+    "charts",
+    "dashboard",
+    "visualization",
+    "typescript"
+  ],
   "exports": {
     ".": {
       "import": {

@@ -1,6 +1,6 @@
 {
   "name": "@efxlab/layout-core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Framework-agnostic core types and presets for EfxLayout",
   "type": "module",
   "license": "MIT",
@@ -14,7 +14,12 @@
     "url": "git+https://github.com/electroheadfx/efx-libs.git",
     "directory": "packages/efx-layout-core"
   },
-  "keywords": ["layout", "css-grid", "dashboard", "typescript"],
+  "keywords": [
+    "layout",
+    "css-grid",
+    "dashboard",
+    "typescript"
+  ],
   "exports": {
     ".": {
       "import": {
