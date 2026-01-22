@@ -179,19 +179,11 @@ function EfxCharts2Content() {
     'left'
   )
 
-  // ✨ Use the streaming data hook - handles state, loading, and placeholders
+  // ✨ Use the streaming data hook - handles state and loading
   const { chartData, sectionLoadingStates, reset, loadTimes } =
     useStreamingData<SectionData, TimeSeriesDataPoint[]>({
       loaderData: loaderData as unknown as Record<string, Promise<SectionData>>,
       sections: SECTIONS,
-      placeholder: {
-        type: 'timeseries',
-        count: 50,
-        overrides: {
-          sidebar: { count: 10 },
-          footer: { count: 10 },
-        },
-      },
       onSectionLoad: (section, data) => {
         console.log(`[CLIENT] ${section} resolved:`, data)
       },
