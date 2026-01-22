@@ -200,13 +200,13 @@ function EfxChartsStreamingContent() {
   return (
     <div
       className="bg-rs-body flex flex-col"
-      style={{ height: 'calc(100vh - 70px)' }}
+      style={{ height: 'calc(100vh - 70px)', overflow: 'hidden' }}
     >
       {/* Control Panel */}
       <Panel
         bordered
         shaded
-        className="bg-rs-bg-card m-6 mb-0"
+        className="bg-rs-bg-card mx-6 mt-6"
         style={{ flexShrink: 0 }}
       >
         <div className="flex flex-wrap items-center justify-between gap-4">
@@ -248,7 +248,8 @@ function EfxChartsStreamingContent() {
 
       {/* EfxLayout with Title + Chart Content */}
       <EfxLayout
-        className="border rounded-lg m-6 h-full"
+        className="border rounded-lg mx-6 my-4"
+        style={{ flex: 1, minHeight: 0 }}
         template={{
           areas: `"title" "content"`,
           columns: ['1fr'],
@@ -332,7 +333,12 @@ function EfxChartsStreamingContent() {
       </EfxLayout>
 
       {/* Debug: Show load times */}
-      <Panel bordered shaded className="bg-rs-bg-card mx-6 mb-6">
+      <Panel
+        bordered
+        shaded
+        className="bg-rs-bg-card mx-6 mb-6"
+        style={{ flexShrink: 0 }}
+      >
         <h3 className="font-semibold mb-2">Load Status</h3>
         <div className="grid grid-cols-4 gap-4 text-sm">
           {SECTIONS.map((section) => (
