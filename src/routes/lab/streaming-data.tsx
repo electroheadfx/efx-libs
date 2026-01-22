@@ -44,7 +44,7 @@ async function generateSectionData(
 		} data loaded!`,
 		timestamp: new Date().toISOString(),
 		loadTime: Date.now() - start,
-	};
+	}
 	console.log(`[SERVER] ${section} loaded:`, result);
 	return result;
 }
@@ -70,7 +70,7 @@ const getFooterData = createServerFn({ method: "GET" }).handler(
 // Route Definition
 // ============================================================================
 
-export const Route = createFileRoute("/streaming-data")({
+export const Route = createFileRoute("/lab/streaming-data")({
 	loader: async () => {
 		// Each section is deferred independently - they stream in parallel
 		// but resolve at different times based on their delays
@@ -79,7 +79,7 @@ export const Route = createFileRoute("/streaming-data")({
 			sidebar: defer(getSidebarData()),
 			main: defer(getMainData()),
 			footer: defer(getFooterData()),
-		};
+		}
 	},
 
 	component: StreamingDataDemo,
@@ -117,7 +117,7 @@ function StreamingDataDemo() {
 				<SectionPanel title="Footer (2000ms)" promise={loaderData.footer} />
 			</div>
 		</div>
-	);
+	)
 }
 
 function SectionPanel({
@@ -134,7 +134,7 @@ function SectionPanel({
 				{(data) => <SectionContent data={data} />}
 			</Await>
 		</Panel>
-	);
+	)
 }
 
 function SectionLoading() {
@@ -142,7 +142,7 @@ function SectionLoading() {
 		<div className="flex items-center justify-center h-20">
 			<Loader content="Loading..." />
 		</div>
-	);
+	)
 }
 
 function SectionContent({ data }: { data: SectionData }) {
@@ -161,5 +161,5 @@ function SectionContent({ data }: { data: SectionData }) {
 			</p>
 			<p className="text-rs-secondary text-xs font-mono">{data.timestamp}</p>
 		</div>
-	);
+	)
 }

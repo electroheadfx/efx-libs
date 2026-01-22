@@ -9,36 +9,20 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TestRouteImport } from './routes/test'
-import { Route as StreamingDataEchartsRouteImport } from './routes/streaming-data-echarts'
-import { Route as StreamingDataRouteImport } from './routes/streaming-data'
 import { Route as LayoutEchartsRouteImport } from './routes/layout-echarts'
 import { Route as EfxChartsStreamingRouteImport } from './routes/efx-charts-streaming'
 import { Route as EfxChartsRouteImport } from './routes/efx-charts'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as BasicEchartsRouteImport } from './routes/basic-echarts'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LabStreamingDataEchartsRouteImport } from './routes/lab/streaming-data-echarts'
+import { Route as LabStreamingDataRouteImport } from './routes/lab/streaming-data'
 import { Route as ExamplesSalesAnalyticsRouteImport } from './routes/examples/sales-analytics'
 import { Route as ExamplesPerformanceRouteImport } from './routes/examples/performance'
 import { Route as ExamplesOperationsRouteImport } from './routes/examples/operations'
 import { Route as ExamplesMarketingRouteImport } from './routes/examples/marketing'
 import { Route as ExamplesFinancialRouteImport } from './routes/examples/financial'
 
-const TestRoute = TestRouteImport.update({
-  id: '/test',
-  path: '/test',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StreamingDataEchartsRoute = StreamingDataEchartsRouteImport.update({
-  id: '/streaming-data-echarts',
-  path: '/streaming-data-echarts',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StreamingDataRoute = StreamingDataRouteImport.update({
-  id: '/streaming-data',
-  path: '/streaming-data',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LayoutEchartsRoute = LayoutEchartsRouteImport.update({
   id: '/layout-echarts',
   path: '/layout-echarts',
@@ -67,6 +51,16 @@ const BasicEchartsRoute = BasicEchartsRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LabStreamingDataEchartsRoute = LabStreamingDataEchartsRouteImport.update({
+  id: '/lab/streaming-data-echarts',
+  path: '/lab/streaming-data-echarts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LabStreamingDataRoute = LabStreamingDataRouteImport.update({
+  id: '/lab/streaming-data',
+  path: '/lab/streaming-data',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ExamplesSalesAnalyticsRoute = ExamplesSalesAnalyticsRouteImport.update({
@@ -102,14 +96,13 @@ export interface FileRoutesByFullPath {
   '/efx-charts': typeof EfxChartsRoute
   '/efx-charts-streaming': typeof EfxChartsStreamingRoute
   '/layout-echarts': typeof LayoutEchartsRoute
-  '/streaming-data': typeof StreamingDataRoute
-  '/streaming-data-echarts': typeof StreamingDataEchartsRoute
-  '/test': typeof TestRoute
   '/examples/financial': typeof ExamplesFinancialRoute
   '/examples/marketing': typeof ExamplesMarketingRoute
   '/examples/operations': typeof ExamplesOperationsRoute
   '/examples/performance': typeof ExamplesPerformanceRoute
   '/examples/sales-analytics': typeof ExamplesSalesAnalyticsRoute
+  '/lab/streaming-data': typeof LabStreamingDataRoute
+  '/lab/streaming-data-echarts': typeof LabStreamingDataEchartsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -118,14 +111,13 @@ export interface FileRoutesByTo {
   '/efx-charts': typeof EfxChartsRoute
   '/efx-charts-streaming': typeof EfxChartsStreamingRoute
   '/layout-echarts': typeof LayoutEchartsRoute
-  '/streaming-data': typeof StreamingDataRoute
-  '/streaming-data-echarts': typeof StreamingDataEchartsRoute
-  '/test': typeof TestRoute
   '/examples/financial': typeof ExamplesFinancialRoute
   '/examples/marketing': typeof ExamplesMarketingRoute
   '/examples/operations': typeof ExamplesOperationsRoute
   '/examples/performance': typeof ExamplesPerformanceRoute
   '/examples/sales-analytics': typeof ExamplesSalesAnalyticsRoute
+  '/lab/streaming-data': typeof LabStreamingDataRoute
+  '/lab/streaming-data-echarts': typeof LabStreamingDataEchartsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -135,14 +127,13 @@ export interface FileRoutesById {
   '/efx-charts': typeof EfxChartsRoute
   '/efx-charts-streaming': typeof EfxChartsStreamingRoute
   '/layout-echarts': typeof LayoutEchartsRoute
-  '/streaming-data': typeof StreamingDataRoute
-  '/streaming-data-echarts': typeof StreamingDataEchartsRoute
-  '/test': typeof TestRoute
   '/examples/financial': typeof ExamplesFinancialRoute
   '/examples/marketing': typeof ExamplesMarketingRoute
   '/examples/operations': typeof ExamplesOperationsRoute
   '/examples/performance': typeof ExamplesPerformanceRoute
   '/examples/sales-analytics': typeof ExamplesSalesAnalyticsRoute
+  '/lab/streaming-data': typeof LabStreamingDataRoute
+  '/lab/streaming-data-echarts': typeof LabStreamingDataEchartsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -153,14 +144,13 @@ export interface FileRouteTypes {
     | '/efx-charts'
     | '/efx-charts-streaming'
     | '/layout-echarts'
-    | '/streaming-data'
-    | '/streaming-data-echarts'
-    | '/test'
     | '/examples/financial'
     | '/examples/marketing'
     | '/examples/operations'
     | '/examples/performance'
     | '/examples/sales-analytics'
+    | '/lab/streaming-data'
+    | '/lab/streaming-data-echarts'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -169,14 +159,13 @@ export interface FileRouteTypes {
     | '/efx-charts'
     | '/efx-charts-streaming'
     | '/layout-echarts'
-    | '/streaming-data'
-    | '/streaming-data-echarts'
-    | '/test'
     | '/examples/financial'
     | '/examples/marketing'
     | '/examples/operations'
     | '/examples/performance'
     | '/examples/sales-analytics'
+    | '/lab/streaming-data'
+    | '/lab/streaming-data-echarts'
   id:
     | '__root__'
     | '/'
@@ -185,14 +174,13 @@ export interface FileRouteTypes {
     | '/efx-charts'
     | '/efx-charts-streaming'
     | '/layout-echarts'
-    | '/streaming-data'
-    | '/streaming-data-echarts'
-    | '/test'
     | '/examples/financial'
     | '/examples/marketing'
     | '/examples/operations'
     | '/examples/performance'
     | '/examples/sales-analytics'
+    | '/lab/streaming-data'
+    | '/lab/streaming-data-echarts'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -202,39 +190,17 @@ export interface RootRouteChildren {
   EfxChartsRoute: typeof EfxChartsRoute
   EfxChartsStreamingRoute: typeof EfxChartsStreamingRoute
   LayoutEchartsRoute: typeof LayoutEchartsRoute
-  StreamingDataRoute: typeof StreamingDataRoute
-  StreamingDataEchartsRoute: typeof StreamingDataEchartsRoute
-  TestRoute: typeof TestRoute
   ExamplesFinancialRoute: typeof ExamplesFinancialRoute
   ExamplesMarketingRoute: typeof ExamplesMarketingRoute
   ExamplesOperationsRoute: typeof ExamplesOperationsRoute
   ExamplesPerformanceRoute: typeof ExamplesPerformanceRoute
   ExamplesSalesAnalyticsRoute: typeof ExamplesSalesAnalyticsRoute
+  LabStreamingDataRoute: typeof LabStreamingDataRoute
+  LabStreamingDataEchartsRoute: typeof LabStreamingDataEchartsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/test': {
-      id: '/test'
-      path: '/test'
-      fullPath: '/test'
-      preLoaderRoute: typeof TestRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/streaming-data-echarts': {
-      id: '/streaming-data-echarts'
-      path: '/streaming-data-echarts'
-      fullPath: '/streaming-data-echarts'
-      preLoaderRoute: typeof StreamingDataEchartsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/streaming-data': {
-      id: '/streaming-data'
-      path: '/streaming-data'
-      fullPath: '/streaming-data'
-      preLoaderRoute: typeof StreamingDataRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/layout-echarts': {
       id: '/layout-echarts'
       path: '/layout-echarts'
@@ -275,6 +241,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lab/streaming-data-echarts': {
+      id: '/lab/streaming-data-echarts'
+      path: '/lab/streaming-data-echarts'
+      fullPath: '/lab/streaming-data-echarts'
+      preLoaderRoute: typeof LabStreamingDataEchartsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lab/streaming-data': {
+      id: '/lab/streaming-data'
+      path: '/lab/streaming-data'
+      fullPath: '/lab/streaming-data'
+      preLoaderRoute: typeof LabStreamingDataRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/examples/sales-analytics': {
@@ -322,14 +302,13 @@ const rootRouteChildren: RootRouteChildren = {
   EfxChartsRoute: EfxChartsRoute,
   EfxChartsStreamingRoute: EfxChartsStreamingRoute,
   LayoutEchartsRoute: LayoutEchartsRoute,
-  StreamingDataRoute: StreamingDataRoute,
-  StreamingDataEchartsRoute: StreamingDataEchartsRoute,
-  TestRoute: TestRoute,
   ExamplesFinancialRoute: ExamplesFinancialRoute,
   ExamplesMarketingRoute: ExamplesMarketingRoute,
   ExamplesOperationsRoute: ExamplesOperationsRoute,
   ExamplesPerformanceRoute: ExamplesPerformanceRoute,
   ExamplesSalesAnalyticsRoute: ExamplesSalesAnalyticsRoute,
+  LabStreamingDataRoute: LabStreamingDataRoute,
+  LabStreamingDataEchartsRoute: LabStreamingDataEchartsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -83,7 +83,7 @@ const getFooterData = createServerFn({ method: 'GET' }).handler(
 // Route Definition
 // ============================================================================
 
-export const Route = createFileRoute('/streaming-data-echarts')({
+export const Route = createFileRoute('/lab/streaming-data-echarts')({
   loader: async () => ({
     header: defer(getHeaderData()),
     sidebar: defer(getSidebarData()),
