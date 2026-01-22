@@ -1,5 +1,5 @@
 {
-  "name": "@efx/chart-react",
+  "name": "@efxlab/chart-react",
   "version": "0.1.0",
   "description": "React components for EfxChart - ECharts-based multi-chart dashboards",
   "type": "module",
@@ -43,7 +43,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@efx/chart-core": "workspace:*"
+    "@efxlab/chart-core": "workspace:*"
   },
   "peerDependencies": {
     "echarts": "^5.0.0 || ^6.0.0",

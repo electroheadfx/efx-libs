@@ -1,5 +1,5 @@
 {
-  "name": "@efx/layout-react",
+  "name": "@efxlab/layout-react",
   "version": "0.1.0",
   "description": "React components for EfxLayout - CSS Grid-based dashboard layouts",
   "type": "module",
@@ -43,7 +43,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@efx/layout-core": "workspace:*"
+    "@efxlab/layout-core": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0"

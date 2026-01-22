@@ -1,5 +1,5 @@
 {
-  "name": "@efx/chart-core",
+  "name": "@efxlab/chart-core",
   "version": "0.1.0",
   "description": "Framework-agnostic core types, utilities, and templates for EfxChart",
   "type": "module",

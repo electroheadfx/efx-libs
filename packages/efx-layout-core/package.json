@@ -1,5 +1,5 @@
 {
-  "name": "@efx/layout-core",
+  "name": "@efxlab/layout-core",
   "version": "0.1.0",
   "description": "Framework-agnostic core types and presets for EfxLayout",
   "type": "module",
