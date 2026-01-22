@@ -4,12 +4,17 @@
   "description": "Framework-agnostic core types and presets for EfxLayout",
   "type": "module",
   "license": "MIT",
-  "author": "",
+  "author": "EFX Team",
+  "homepage": "https://github.com/user/efx-packages#readme",
+  "bugs": {
+    "url": "https://github.com/user/efx-packages/issues"
+  },
   "repository": {
     "type": "git",
-    "url": "",
+    "url": "git+https://github.com/user/efx-packages.git",
     "directory": "packages/efx-layout-core"
   },
+  "keywords": ["layout", "css-grid", "dashboard", "typescript"],
   "exports": {
     ".": {
       "import": {

@@ -4,12 +4,17 @@
   "description": "Framework-agnostic core types, utilities, and templates for EfxChart",
   "type": "module",
   "license": "MIT",
-  "author": "",
+  "author": "EFX Team",
+  "homepage": "https://github.com/user/efx-packages#readme",
+  "bugs": {
+    "url": "https://github.com/user/efx-packages/issues"
+  },
   "repository": {
     "type": "git",
-    "url": "",
+    "url": "git+https://github.com/user/efx-packages.git",
     "directory": "packages/efx-chart-core"
   },
+  "keywords": ["echarts", "charts", "dashboard", "visualization", "typescript"],
   "exports": {
     ".": {
       "import": {

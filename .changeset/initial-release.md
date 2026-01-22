@@ -1,0 +1,32 @@
+---
+"@efx/layout-core": minor
+"@efx/layout-react": minor
+"@efx/chart-core": minor
+"@efx/chart-react": minor
+---
+
+Initial release of EfxChart and EfxLayout packages
+
+## @efx/layout-core
+- Framework-agnostic types for CSS Grid layouts
+- Layout presets (analytics, report, comparison, monitoring)
+- Utility functions for padding and gap normalization
+
+## @efx/layout-react
+- EfxLayout component for CSS Grid-based layouts
+- EfxGrid component for simple auto-layout grids
+- EfxResponsiveLayout for responsive breakpoint switching
+- useBreakpoint and useMediaQuery hooks
+
+## @efx/chart-core
+- Framework-agnostic types for ECharts dashboards
+- ASCII-based layout templates (finance, dashboard, analytics, etc.)
+- Template parsing and option building utilities
+- Data generators for testing
+
+## @efx/chart-react
+- EfxChartsLayout component for multi-chart dashboards
+- EfxChart declarative chart configuration
+- createTypedChart factory for type-safe section autocomplete
+- useStreamingData hook for progressive data loading
+- useEChartsInstance hook for ECharts lifecycle management
