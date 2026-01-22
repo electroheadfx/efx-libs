@@ -227,22 +227,29 @@ pnpm --filter @efxlab/chart-react build
 pnpm --filter @efxlab/layout-core typecheck
 ```
 
-## 🔄 SSR-Safe Implementation
+## 🔄 Import Patterns
 
-### Lazy Loading Pattern
+### Direct Import (Simpler)
 
-For SSR environments, ECharts must be lazy-loaded to avoid `window is not defined` errors:
+Most pages use direct imports for simplicity:
+
+```tsx
+import ReactECharts from 'echarts-for-react'
+
+function Chart() {
+  return <ReactECharts option={option} style={{ height: '100%', width: '100%' }} />
+}
+```
+
+### Lazy Loading (Optional Optimization)
+
+Optionally use lazy loading for better initial load performance:
 
 ```tsx
 import { lazy, Suspense } from 'react'
 
-// Lazy load ECharts components
 const ReactECharts = lazy(() => import('echarts-for-react'))
-const MatrixChart = lazy(() =>
-  import('@/components/charts/composed/MatrixChart').then(m => ({ default: m.MatrixChart }))
-)
 
-// Usage with Suspense
 function Chart() {
   return (
     <Suspense fallback={<div className="flex items-center justify-center h-full">Loading...</div>}>
@@ -256,8 +263,8 @@ function Chart() {
 
 | Pattern | Use Case | Example Page |
 |---------|----------|-------------|
-| Direct import | Client-side only pages, simpler setup | `/basic-echarts` |
-| Lazy loading | SSR pages, better initial load performance | `/layout-echarts` |
+| Direct import | Simpler, less boilerplate | `/basic-echarts`, `/efx-charts` |
+| Lazy loading | Code splitting, reduced initial bundle size | `/layout-echarts` |
 
 ---
 
