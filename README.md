@@ -2,7 +2,69 @@
 
 A comprehensive data visualization platform built with TanStack Start, featuring advanced multi-chart ECharts compositions, responsive layouts, and real-time data updates.
 
-## 🚀 Features
+**This is a monorepo** containing both a demo application and **four published npm packages** for building chart-based dashboards:
+
+- **[@efxlab/chart-core](https://www.npmjs.com/package/@efxlab/chart-core)** - Framework-agnostic chart utilities and types
+- **[@efxlab/chart-react](https://www.npmjs.com/package/@efxlab/chart-react)** - React components for ECharts dashboards
+- **[@efxlab/layout-core](https://www.npmjs.com/package/@efxlab/layout-core)** - Framework-agnostic layout utilities
+- **[@efxlab/layout-react](https://www.npmjs.com/package/@efxlab/layout-react)** - React layout components
+
+## 📦 Published Packages
+
+### Using the packages in your project
+
+```bash
+# Install chart packages
+npm install @efxlab/chart-core @efxlab/chart-react echarts
+
+# Install layout packages  
+npm install @efxlab/layout-core @efxlab/layout-react
+```
+
+**Quick Example:**
+
+```tsx
+import { EfxChartsLayout, EfxChart } from '@efxlab/chart-react'
+
+const template = {
+  areas: [['kpi', 'chart']],
+  columns: ['1fr', '2fr'],
+  rows: ['1fr'],
+}
+
+function Dashboard() {
+  return (
+    <EfxChartsLayout template={template}>
+      <EfxChart
+        id="kpi"
+        title="Revenue"
+        option={{
+          series: [{ type: 'bar', data: [100, 200, 150] }]
+        }}
+      />
+      <EfxChart
+        id="chart"
+        title="Trend"
+        option={{
+          xAxis: { type: 'category', data: ['A', 'B', 'C'] },
+          yAxis: { type: 'value' },
+          series: [{ type: 'line', data: [10, 20, 15] }]
+        }}
+      />
+    </EfxChartsLayout>
+  )
+}
+```
+
+See individual package READMEs for detailed documentation:
+- [packages/efx-chart-core/README.md](./packages/efx-chart-core/README.md)
+- [packages/efx-chart-react/README.md](./packages/efx-chart-react/README.md)
+- [packages/efx-layout-core/README.md](./packages/efx-layout-core/README.md)
+- [packages/efx-layout-react/README.md](./packages/efx-layout-react/README.md)
+
+---
+
+## 🚀 Demo Application Features
 
 - **Multi-Chart ECharts Compositions** - Combine multiple visualization types within single ECharts instances
 - **3 ECharts Demo Pages** - Basic Charts, Layout Systems, and Navigation Hub
@@ -56,6 +118,8 @@ The app will be available at `http://localhost:3000`
 
 ### Available Scripts
 
+**Demo Application:**
+
 ```bash
 pnpm dev          # Start development server
 pnpm build        # Build for production
@@ -66,10 +130,30 @@ pnpm format       # Format code
 pnpm test         # Run tests (Vitest)
 ```
 
+**Package Management:**
+
+```bash
+pnpm build:packages        # Build all packages in ./packages/
+pnpm clean:packages        # Clean all package dist folders
+
+# Changesets workflow for versioning and publishing
+pnpm changeset             # Create a new changeset
+pnpm changeset:version     # Apply changesets and bump versions
+pnpm changeset:publish     # Build and publish packages to npm
+```
+
 ## 📁 Project Structure
 
+This is a **pnpm monorepo** with the following structure:
+
 ```
-src/
+packages/
+├── efx-chart-core/        # @efxlab/chart-core - Framework-agnostic chart utilities
+├── efx-chart-react/       # @efxlab/chart-react - React chart components
+├── efx-layout-core/       # @efxlab/layout-core - Framework-agnostic layout utilities
+└── efx-layout-react/      # @efxlab/layout-react - React layout components
+
+src/                       # Demo application
 ├── components/
 │   ├── charts/
 │   │   ├── composed/          # Multi-chart ECharts components
@@ -124,6 +208,23 @@ src/
     ├── chart.types.ts
     ├── data.types.ts
     └── theme.types.ts
+```
+
+### Working with the Monorepo
+
+```bash
+# Install all dependencies
+pnpm install
+
+# Build all packages
+pnpm build:packages
+
+# Start demo app
+pnpm dev
+
+# Run package-specific commands
+pnpm --filter @efxlab/chart-react build
+pnpm --filter @efxlab/layout-core typecheck
 ```
 
 ## 🔄 SSR-Safe Implementation
