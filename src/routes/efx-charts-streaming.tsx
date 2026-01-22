@@ -14,8 +14,8 @@ import {
   EFX_CHART_TEMPLATES,
   EfxChartsLayout,
   useStreamingData,
-} from '../components/EfxChart'
-import { EfxLayout, LayoutItem } from '../components/EfxLayout'
+} from '@efx/chart-react'
+import { EfxLayout, LayoutItem } from '@efx/layout-react'
 import { ChartLoadingFallback } from '../components/route-states'
 import type { TimeSeriesDataPoint } from '../serverActions/efxChartsActions'
 
