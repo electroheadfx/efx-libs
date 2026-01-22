@@ -16,7 +16,7 @@ import {
   TrendingUp,
   X,
 } from 'lucide-react'
-import { useState, useRef, useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useAppTheme } from '@/providers/ThemeProvider'
 import type { AppTheme } from '@/types/theme.types'
 
@@ -105,7 +105,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="p-4 flex items-center justify-between bg-gray-800 text-white shadow-lg">
+      <header className="sticky top-0 z-40 p-4 flex items-center justify-between bg-gray-800 text-white shadow-lg">
         <div className="flex items-center">
           <button
             type="button"

@@ -1,19 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
-import type React from "react";
-import { useState, useMemo, lazy, Suspense } from "react";
-import { useAppTheme } from "@/providers/ThemeProvider";
 import type { EChartsOption } from "echarts";
-import type { AppTheme } from "@/types/theme.types";
-import { Button, ButtonGroup, Panel, Badge } from "rsuite";
+import type React from "react";
+import { lazy, Suspense, useMemo, useState } from "react";
+import { Badge, Button, ButtonGroup, Panel } from "rsuite";
 import {
+	DashboardGrid,
 	DashboardLayout,
 	LayoutItem,
-	DashboardGrid,
-	ResponsiveDashboardLayout,
 	type LayoutTemplate,
+	ResponsiveDashboardLayout,
 } from "@/components/layout";
 import { useMatrixLayout } from "@/hooks/useMatrixLayout";
+import { useAppTheme } from "@/providers/ThemeProvider";
 import type { MatrixSection } from "@/types/matrixLayout.types";
+import type { AppTheme } from "@/types/theme.types";
 
 // Lazy load ECharts components (client-side only)
 const ReactECharts = lazy(() => import("echarts-for-react"));

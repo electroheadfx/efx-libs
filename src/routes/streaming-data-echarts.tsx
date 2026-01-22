@@ -13,10 +13,10 @@
 
 import { createFileRoute, defer } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
-import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
-import { Panel, Loader } from 'rsuite'
-import * as echarts from 'echarts'
 import type { ECharts, EChartsCoreOption } from 'echarts'
+import * as echarts from 'echarts'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Loader, Panel } from 'rsuite'
 
 // ============================================================================
 // Types
@@ -150,6 +150,7 @@ function StreamingEChartsDemo() {
 
     gridIds.forEach((id, index) => {
       try {
+        // biome-ignore lint/suspicious/noExplicitAny: ECharts internal API
         const gridModel = (chart as any).getModel().getComponent('grid', index)
         if (gridModel?.coordinateSystem) {
           const rect = gridModel.coordinateSystem.getRect()
@@ -160,7 +161,7 @@ function StreamingEChartsDemo() {
             height: rect.height,
           }
         }
-      } catch (e) {
+      } catch {
         // Grid not ready yet
       }
     })
@@ -201,7 +202,7 @@ function StreamingEChartsDemo() {
         chart.dispose()
       }
     }
-  }, []) // Only run once on mount
+  }, [updateGridPositions, option]) // Only run once on mount
 
   // Update option when data changes (separate effect for updates)
   useEffect(() => {

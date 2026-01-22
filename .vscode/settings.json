@@ -1,26 +1,26 @@
 {
-  "files.watcherExclude": {
-    "**/routeTree.gen.ts": true
-  },
-  "search.exclude": {
-    "**/routeTree.gen.ts": true
-  },
-  "files.readonlyInclude": {
-    "**/routeTree.gen.ts": true
-  },
-  "tailwindCSS.validate": true,
-  "tailwindCSS.lint.cssConflict": "warning",
-  "tailwindCSS.lint.invalidApply": "error",
-  "tailwindCSS.lint.invalidScreen": "error",
-  "tailwindCSS.lint.invalidVariant": "error",
-  "tailwindCSS.lint.invalidConfigPath": "error",
-  "tailwindCSS.lint.invalidTailwindDirective": "error",
-  "tailwindCSS.lint.recommendedVariantOrder": "warning",
-  "tailwindCSS.files.exclude": [
-    "**/.git/**",
-    "**/node_modules/**",
-    "**/.hg/**",
-    "**/.svn/**",
-    "**/*.md"
-  ]
+	"files.watcherExclude": {
+		"**/routeTree.gen.ts": true
+	},
+	"search.exclude": {
+		"**/routeTree.gen.ts": true
+	},
+	"files.readonlyInclude": {
+		"**/routeTree.gen.ts": true
+	},
+	"tailwindCSS.validate": true,
+	"tailwindCSS.lint.cssConflict": "warning",
+	"tailwindCSS.lint.invalidApply": "error",
+	"tailwindCSS.lint.invalidScreen": "error",
+	"tailwindCSS.lint.invalidVariant": "error",
+	"tailwindCSS.lint.invalidConfigPath": "error",
+	"tailwindCSS.lint.invalidTailwindDirective": "error",
+	"tailwindCSS.lint.recommendedVariantOrder": "warning",
+	"tailwindCSS.files.exclude": [
+		"**/.git/**",
+		"**/node_modules/**",
+		"**/.hg/**",
+		"**/.svn/**",
+		"**/*.md"
+	]
 }

@@ -3,16 +3,15 @@
  */
 
 export interface RouteErrorProps {
-  error: Error
-  reset: () => void
-  title?: string
-  showHomeButton?: boolean
-  showResetButton?: boolean
+	error: Error;
+	reset: () => void;
+	title?: string;
+	showHomeButton?: boolean;
+	showResetButton?: boolean;
 }
 
 export interface RouteLoadingProps {
-  message?: string
-  size?: 'xs' | 'sm' | 'md' | 'lg'
-  fullScreen?: boolean
+	message?: string;
+	size?: "xs" | "sm" | "md" | "lg";
+	fullScreen?: boolean;
 }
-

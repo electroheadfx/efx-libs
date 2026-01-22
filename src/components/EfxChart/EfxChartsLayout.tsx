@@ -1,18 +1,24 @@
 /**
- * EfxChartsLayout Component
+ * EfxChartsLayout Component (Streaming Version)
  *
  * The main layout component that renders a single ECharts instance
  * with matrix-based grid positioning from ASCII templates.
+ *
+ * STREAMING FEATURES:
+ * - RSuite Loader overlay positioned over each grid section
+ * - Progressive data loading with visual feedback
  */
 
 import {
   Children,
   isValidElement,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useState,
 } from 'react'
+import { Loader } from 'rsuite'
 import { type EChartsType, useEChartsInstance } from './core'
 import { useResizeObserver } from './core/useResizeObserver'
 import { EfxChart } from './EfxChart'
@@ -30,6 +36,22 @@ import {
   mirrorLayoutHorizontally,
   parseLayoutTemplate,
 } from './utils'
+
+// ============================================================================
+// Streaming Types
+// ============================================================================
+
+interface GridPosition {
+  left: number
+  top: number
+  width: number
+  height: number
+}
+
+interface StreamingState {
+  loadedSections: Set<string>
+  gridPositions: Record<string, GridPosition>
+}
 
 /**
  * Extract EfxChart props from children
@@ -69,6 +91,41 @@ function extractChartProps(children: React.ReactNode): EfxChartProps<string>[] {
  * </EfxChartsLayout>
  * ```
  */
+// ============================================================================
+// Streaming Section Loader Component
+// ============================================================================
+
+function SectionLoader({
+  position,
+  isLoading,
+  spinnerSize = 'md',
+}: {
+  section: string
+  position?: GridPosition
+  isLoading: boolean
+  spinnerSize?: 'xs' | 'sm' | 'md' | 'lg'
+}) {
+  if (!isLoading || !position) return null
+
+  return (
+    <div
+      className="absolute flex items-center justify-center pointer-events-none"
+      style={{
+        left: position.left,
+        top: position.top,
+        width: position.width,
+        height: position.height,
+      }}
+    >
+      <Loader size={spinnerSize} />
+    </div>
+  )
+}
+
+// ============================================================================
+// Main Component
+// ============================================================================
+
 export function EfxChartsLayout<
   TTemplate extends EfxLayoutTemplate = EfxLayoutTemplate
 >({
@@ -85,13 +142,24 @@ export function EfxChartsLayout<
   onEvents,
   renderer = 'canvas',
   theme,
+  // Streaming props
+  loadingStrategy = 'simple',
+  sectionLoadingStates,
+  spinnerSize = 'md',
 }: EfxChartsLayoutProps<TTemplate>) {
   const containerRef = useRef<HTMLDivElement>(null)
+  const chartInstanceRef = useRef<EChartsType | null>(null)
 
   // Track container size for pixel-based gap calculations
   const [containerSize, setContainerSize] = useState<ContainerSize>({
     width: 0,
     height: 0,
+  })
+
+  // Streaming state: track grid positions for loader overlays
+  const [streamingState, setStreamingState] = useState<StreamingState>({
+    loadedSections: new Set(),
+    gridPositions: {},
   })
 
   // Update container size on resize
@@ -136,6 +204,12 @@ export function EfxChartsLayout<
   // Extract chart props from children
   const chartSections = useMemo(() => extractChartProps(children), [children])
 
+  // Get section IDs from template
+  const sectionIds = useMemo(
+    () => template.sections as readonly string[],
+    [template]
+  )
+
   // Build the ECharts option with media queries for responsive layouts
   const option = useMemo(() => {
     const baseOption = buildEChartsOption(
@@ -144,7 +218,8 @@ export function EfxChartsLayout<
       desktopLayout.columns,
       desktopLayout.rows,
       gapConfig,
-      containerSize
+      containerSize,
+      loadingStrategy === 'streaming' ? sectionLoadingStates : undefined
     )
 
     // Add media queries for responsive behavior
@@ -169,15 +244,58 @@ export function EfxChartsLayout<
     breakpoints,
     gapConfig,
     containerSize,
+    loadingStrategy,
+    sectionLoadingStates,
   ])
 
+  // Update grid positions for loader overlays (streaming mode)
+  const updateGridPositions = useCallback(() => {
+    const chart = chartInstanceRef.current
+    if (!chart || loadingStrategy !== 'streaming') return
+
+    const positions: Record<string, GridPosition> = {}
+
+    sectionIds.forEach((id, index) => {
+      try {
+        // biome-ignore lint/suspicious/noExplicitAny: ECharts internal API
+        const gridModel = (chart as any).getModel().getComponent('grid', index)
+        if (gridModel?.coordinateSystem) {
+          const rect = gridModel.coordinateSystem.getRect()
+          positions[id] = {
+            left: rect.x,
+            top: rect.y,
+            width: rect.width,
+            height: rect.height,
+          }
+        }
+      } catch {
+        // Grid not ready yet
+      }
+    })
+
+    setStreamingState((prev) => ({ ...prev, gridPositions: positions }))
+  }, [loadingStrategy, sectionIds])
+
   // Handle chart ready callback
-  const handleReady = useMemo(() => {
-    if (!onChartReady) return undefined
-    return (chart: EChartsType) => {
-      onChartReady(chart as unknown as import('echarts').ECharts)
+  const handleReady = useCallback(
+    (chart: EChartsType) => {
+      chartInstanceRef.current = chart
+      onChartReady?.(chart as unknown as import('echarts').ECharts)
+
+      // Update grid positions after chart is ready (streaming mode)
+      if (loadingStrategy === 'streaming') {
+        setTimeout(updateGridPositions, 50)
+      }
+    },
+    [onChartReady, loadingStrategy, updateGridPositions]
+  )
+
+  // Update grid positions when container resizes (streaming mode)
+  useEffect(() => {
+    if (loadingStrategy === 'streaming' && containerSize.width > 0) {
+      updateGridPositions()
     }
-  }, [onChartReady])
+  }, [containerSize, loadingStrategy, updateGridPositions])
 
   // Convert events to core format
   const coreEvents = useMemo(() => {
@@ -198,7 +316,7 @@ export function EfxChartsLayout<
   }, [onEvents])
 
   // Initialize ECharts
-  useEChartsInstance(containerRef, {
+  const { instanceRef } = useEChartsInstance(containerRef, {
     option,
     events: coreEvents,
     onReady: handleReady,
@@ -207,20 +325,44 @@ export function EfxChartsLayout<
     autoResize: true,
   })
 
+  // Keep chart instance ref in sync
+  useEffect(() => {
+    chartInstanceRef.current = instanceRef.current
+  }, [instanceRef])
+
   // Container styles - fill parent container height
-  // Uses both height: 100% and flex: 1 to work in both block and flex parent contexts
   const containerStyle = useMemo(
     () => ({
       width: '100%',
       height: '100%',
       flex: 1,
-      minHeight: 0, // Important for flex containers to allow shrinking
+      minHeight: 0,
       ...style,
     }),
     [style]
   )
 
-  return <div ref={containerRef} className={className} style={containerStyle} />
+  // Determine if each section is loading (streaming mode)
+  const isStreaming = loadingStrategy === 'streaming'
+
+  return (
+    <div className={`relative ${className ?? ''}`} style={containerStyle}>
+      {/* ECharts container */}
+      <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
+
+      {/* Loader overlays for streaming mode */}
+      {isStreaming &&
+        sectionIds.map((section) => (
+          <SectionLoader
+            key={section}
+            section={section}
+            position={streamingState.gridPositions[section]}
+            isLoading={sectionLoadingStates?.[section] ?? false}
+            spinnerSize={spinnerSize}
+          />
+        ))}
+    </div>
+  )
 }
 
 export default EfxChartsLayout

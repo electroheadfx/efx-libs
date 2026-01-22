@@ -1,9 +1,9 @@
 import { createRouter } from "@tanstack/react-router";
-import { routeTree } from "./routeTree.gen";
 import {
-	GlobalPendingComponent,
 	GlobalErrorComponent,
+	GlobalPendingComponent,
 } from "./components/route-states";
+import { routeTree } from "./routeTree.gen";
 
 export const getRouter = () => {
 	const router = createRouter({

@@ -36,9 +36,11 @@ export const Route = createRootRoute({
 const themeScript = `
 (function() {
   try {
-    var theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    // Check localStorage first for user preference
+    var savedTheme = localStorage.getItem('app-theme');
+    var theme = savedTheme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     document.documentElement.dataset.theme = theme;
-    document.documentElement.style.colorScheme = theme;
+    document.documentElement.style.colorScheme = theme === 'high-contrast' ? 'dark' : theme;
   } catch (e) {}
 })();
 `

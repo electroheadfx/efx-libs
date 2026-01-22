@@ -1,27 +1,23 @@
 /**
- * EfxCharts2 Finance Dashboard - Streaming Version
+ * EfxCharts Finance Dashboard - Streaming Version
  *
- * Demonstrates the EfxChart2 component with streaming data loading.
+ * Demonstrates the EfxChart component with streaming data loading.
  * Each chart section loads independently with visual feedback.
  */
 
 import { createFileRoute, defer, useNavigate } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
-import { useState, lazy, Suspense } from 'react'
-import { Panel, Button, ButtonGroup } from 'rsuite'
+import { Suspense, useState } from 'react'
+import { Button, ButtonGroup, Panel } from 'rsuite'
 import {
-  EFX_CHART_TEMPLATES,
   createTypedChart,
+  EFX_CHART_TEMPLATES,
+  EfxChartsLayout,
   useStreamingData,
-} from '../components/EfxChart2'
+} from '../components/EfxChart'
 import { EfxLayout, LayoutItem } from '../components/EfxLayout'
 import { ChartLoadingFallback } from '../components/route-states'
 import type { TimeSeriesDataPoint } from '../serverActions/efxChartsActions'
-
-// Lazy load EfxChartsLayout for SSR compatibility
-const EfxChartsLayout = lazy(
-  () => import('../components/EfxChart2/EfxChartsLayout')
-)
 
 // ============================================================================
 // Types
@@ -136,7 +132,7 @@ const getFooterData = createServerFn({ method: 'GET' })
 // Route Definition
 // ============================================================================
 
-export const Route = createFileRoute('/efx-charts2')({
+export const Route = createFileRoute('/efx-charts-streaming')({
   validateSearch: (search: Record<string, unknown>) => ({
     seed: Number(search.seed) || 42,
   }),
@@ -152,17 +148,17 @@ export const Route = createFileRoute('/efx-charts2')({
     footer: defer(getFooterData({ data: { seed: deps.seed } })),
   }),
 
-  component: EfxCharts2Demo,
+  component: EfxChartsStreamingDemo,
 })
 
 // ============================================================================
 // Main Component
 // ============================================================================
 
-function EfxCharts2Demo() {
+function EfxChartsStreamingDemo() {
   return (
     <Suspense fallback={<ChartLoadingFallback />}>
-      <EfxCharts2Content />
+      <EfxChartsStreamingContent />
     </Suspense>
   )
 }
@@ -170,7 +166,7 @@ function EfxCharts2Demo() {
 // Section names for streaming
 const SECTIONS = ['header', 'sidebar', 'main', 'footer'] as const
 
-function EfxCharts2Content() {
+function EfxChartsStreamingContent() {
   const loaderData = Route.useLoaderData() as StreamingLoaderData
   const { seed } = Route.useSearch()
   const navigate = useNavigate({ from: Route.fullPath })
@@ -263,7 +259,7 @@ function EfxCharts2Content() {
       >
         {/* Title */}
         <LayoutItem area="title">
-          <h2>Streaming Finances Efx Charts v2</h2>
+          <h2>Streaming Finances Efx Charts</h2>
         </LayoutItem>
 
         {/* Chart Content Area */}
@@ -355,4 +351,4 @@ function EfxCharts2Content() {
   )
 }
 
-export default EfxCharts2Demo
+export default EfxChartsStreamingDemo

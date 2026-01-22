@@ -5,7 +5,9 @@ import {
   Grid3X3,
   Layers,
   LayoutGrid,
+  Activity,
 } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { useAppTheme } from '@/providers/ThemeProvider'
 
 export const Route = createFileRoute('/')({
@@ -65,6 +67,22 @@ const techStack: TechStack[] = [
 ]
 
 const demoPages: DemoCard[] = [
+  {
+    to: '/efx-charts',
+    title: 'EfxCharts',
+    subtitle: 'Finance Layout',
+    description:
+      'Matrix-based chart layout with responsive design and React 19 use() hook.',
+    icon: Activity,
+  },
+  {
+    to: '/efx-charts-streaming',
+    title: 'EfxCharts Streaming',
+    subtitle: 'Progressive Loading',
+    description:
+      'Streaming data with independent section loading and visual feedback.',
+    icon: Activity,
+  },
   {
     to: '/basic-echarts',
     title: 'Basic ECharts',
@@ -127,45 +145,45 @@ function QoderLogo({ className }: { className?: string }) {
 const themeStyles = {
   light: {
     // Page background
-    pageBg: 'bg-gradient-to-b from-gray-50 via-white to-gray-100',
-    // Hero section
+    pageBg: 'bg-gradient-to-b from-blue-50 via-white to-blue-50/50',
+    // Hero section with beautiful blue gradient
     heroWrapper: 'relative overflow-hidden',
-    heroBg: 'bg-gradient-to-br from-emerald-50 via-white to-teal-50',
-    heroGlow1: 'bg-gradient-to-r from-emerald-200/40 to-teal-200/40',
-    heroGlow2: 'bg-gradient-to-r from-cyan-200/30 to-blue-200/30',
-    heroGlow3: 'bg-gradient-to-r from-green-200/30 to-emerald-200/30',
-    // Text
-    titleText: 'text-gray-900',
-    titleAccent: 'text-emerald-600',
-    subtitleText: 'text-gray-600',
-    statValue: 'text-emerald-600',
-    statLabel: 'text-gray-500',
+    heroBg: 'bg-gradient-to-br from-blue-100 via-indigo-50 to-purple-100',
+    heroGlow1: 'bg-gradient-to-r from-blue-300/30 to-indigo-300/30',
+    heroGlow2: 'bg-gradient-to-r from-indigo-300/25 to-purple-300/25',
+    heroGlow3: 'bg-gradient-to-r from-emerald-300/20 to-teal-300/20',
+    // Text - improved contrast
+    titleText: 'text-gray-950',
+    titleAccent: 'text-indigo-600',
+    subtitleText: 'text-gray-800',
+    statValue: 'text-indigo-600',
+    statLabel: 'text-gray-600',
     // Badge
-    badgeBg: 'bg-white/80 border-gray-200',
-    badgeText: 'text-gray-700',
-    badgeIcon: 'text-emerald-500',
+    badgeBg: 'bg-white/80 border-indigo-200',
+    badgeText: 'text-gray-800',
+    badgeIcon: 'text-indigo-500',
     // Cards
-    cardBg: 'bg-white border-gray-200 hover:border-gray-300 hover:shadow-lg',
-    cardPreviewBg: 'bg-gradient-to-br from-gray-50 to-gray-100',
+    cardBg: 'bg-white border-gray-200 hover:border-indigo-300 hover:shadow-lg',
+    cardPreviewBg: 'bg-gradient-to-br from-blue-50 to-indigo-50',
     cardPreviewPattern: 'opacity-10',
     cardIconBg:
-      'bg-gray-100 border-gray-200 group-hover:border-emerald-400 group-hover:bg-emerald-50',
-    cardIcon: 'text-gray-400 group-hover:text-emerald-500',
+      'bg-white border-indigo-200 group-hover:border-indigo-400 group-hover:bg-indigo-50',
+    cardIcon: 'text-indigo-400 group-hover:text-indigo-600',
     cardTitle: 'text-gray-900',
-    cardDesc: 'text-gray-500',
-    cardLink: 'text-emerald-600',
+    cardDesc: 'text-gray-600',
+    cardLink: 'text-indigo-600',
     // Footer
     footerBg: 'bg-white border-gray-200',
     techBadgeBg:
-      'bg-gray-50 border-gray-200 hover:border-gray-300 hover:bg-gray-100',
+      'bg-gray-50 border-gray-200 hover:border-indigo-300 hover:bg-indigo-50',
     techBadgeText: 'text-gray-700',
-    qoderBg: 'bg-gray-50 border-gray-200 hover:border-emerald-400',
+    qoderBg: 'bg-gray-50 border-gray-200 hover:border-indigo-400',
     footerText: 'text-gray-500',
   },
   dark: {
     // Page background
     pageBg: 'bg-[#0a0a0a]',
-    // Hero section
+    // Hero section with beautiful blue gradient
     heroWrapper: 'relative overflow-hidden',
     heroBg: 'bg-gradient-to-br from-[#0a0a0a] via-[#0d1117] to-[#0a0a0a]',
     heroGlow1:
@@ -174,7 +192,7 @@ const themeStyles = {
       'bg-[radial-gradient(ellipse_70%_70%_at_80%_30%,_#14b8a650_0%,_transparent_60%)]',
     heroGlow3:
       'bg-[radial-gradient(ellipse_100%_60%_at_50%_100%,_#3b82f640_0%,_transparent_70%)]',
-    // Text
+    // Text - improved contrast
     titleText: 'text-white',
     titleAccent: 'text-emerald-400',
     subtitleText: 'text-zinc-400',
@@ -207,7 +225,7 @@ const themeStyles = {
   'high-contrast': {
     // Page background
     pageBg: 'bg-black',
-    // Hero section
+    // Hero section with beautiful blue gradient
     heroWrapper: 'relative overflow-hidden',
     heroBg: 'bg-black',
     heroGlow1:
@@ -216,7 +234,7 @@ const themeStyles = {
       'bg-[radial-gradient(ellipse_70%_70%_at_80%_30%,_#14b8a670_0%,_transparent_50%)]',
     heroGlow3:
       'bg-[radial-gradient(ellipse_100%_60%_at_50%_100%,_#3b82f660_0%,_transparent_60%)]',
-    // Text
+    // Text - improved contrast
     titleText: 'text-white',
     titleAccent: 'text-emerald-300',
     subtitleText: 'text-gray-200',
@@ -314,7 +332,19 @@ function DemoPageCard({
 
 function LandingPage() {
   const { theme } = useAppTheme()
+  const [mounted, setMounted] = useState(false)
+
+  // Wait for client-side hydration to avoid theme flash
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   const styles = themeStyles[theme]
+
+  // Show a minimal loading state during SSR/hydration to prevent theme flash
+  if (!mounted) {
+    return <div className="min-h-[calc(100vh-72px)] bg-transparent" />
+  }
 
   return (
     <div
@@ -468,13 +498,6 @@ function LandingPage() {
             </a>
           </div>
         </div>
-      </div>
-
-      {/* Footer */}
-      <div className={`py-8 text-center border-t ${styles.footerBg}`}>
-        <p className={`text-sm ${styles.footerText}`}>
-          Open source demo • Theme switching • Seeded random data
-        </p>
       </div>
     </div>
   )

@@ -47,11 +47,15 @@
 // Main Components
 // ============================================================================
 
-import { EfxChart } from "./EfxChart"
-import type { EfxChartProps, EfxLayoutTemplate, ExtractSections } from "./types"
+import { EfxChart } from "./EfxChart";
+import type {
+	EfxChartProps,
+	EfxLayoutTemplate,
+	ExtractSections,
+} from "./types";
 
-export { EfxChart, extractChartProps, isEfxChart } from "./EfxChart"
-export { EfxChartsLayout } from "./EfxChartsLayout"
+export { EfxChart, extractChartProps, isEfxChart } from "./EfxChart";
+export { EfxChartsLayout } from "./EfxChartsLayout";
 
 // ============================================================================
 // Type-Safe Chart Factory
@@ -71,7 +75,7 @@ export { EfxChartsLayout } from "./EfxChartsLayout"
  * ```
  */
 export function createTypedChart<T extends EfxLayoutTemplate>(_template: T) {
-	return EfxChart as React.FC<EfxChartProps<ExtractSections<T>>>
+	return EfxChart as React.FC<EfxChartProps<ExtractSections<T>>>;
 }
 
 // ============================================================================
@@ -88,7 +92,7 @@ export {
 	GRID_2X2_LAYOUT,
 	MONITORING_LAYOUT,
 	type SectionId,
-} from "./templates"
+} from "./templates";
 
 // ============================================================================
 // Core Hooks & Renderer (for advanced usage)
@@ -100,7 +104,20 @@ export {
 	type EChartsType,
 	useEChartsInstance,
 	useResizeObserver,
-} from "./core"
+} from "./core";
+
+// ============================================================================
+// Streaming Hooks
+// ============================================================================
+
+export {
+	type PlaceholderConfig,
+	type PlaceholderOptions,
+	type PlaceholderType,
+	type UseStreamingDataOptions,
+	type UseStreamingDataReturn,
+	useStreamingData,
+} from "./hooks";
 
 // ============================================================================
 // Utilities
@@ -126,7 +143,7 @@ export {
 	parsePadding,
 	// Template parsing
 	parseTemplateToLayout,
-} from "./utils"
+} from "./utils";
 
 // ============================================================================
 // Types
@@ -150,8 +167,6 @@ export type {
 	EfxEventHandler,
 	// Layout types
 	EfxLayoutTemplate,
-	// Type utility for extracting section names
-	ExtractSections,
 	// Padding types
 	EfxPadding,
 	EfxParsedPadding,
@@ -159,6 +174,8 @@ export type {
 	EfxSeriesOption,
 	// Title types
 	EfxTitleOption,
+	// Type utility for extracting section names
+	ExtractSections,
 	MatrixCoord,
 	ParsedLayout,
 	SectionCoordMap,
@@ -166,4 +183,4 @@ export type {
 	// Hook types
 	UseEChartsOptions,
 	UseEChartsReturn,
-} from "./types"
+} from "./types";

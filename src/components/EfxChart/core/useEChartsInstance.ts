@@ -9,8 +9,8 @@
  */
 
 import type {
-  EChartsOption as EChartsCoreOption,
-  ECharts as EChartsType,
+	EChartsOption as EChartsCoreOption,
+	ECharts as EChartsType,
 } from "echarts"
 // Use full ECharts import to include matrix coordinate system
 // The modular imports don't include the matrix feature
@@ -19,8 +19,8 @@ import { type RefObject, useCallback, useEffect, useRef } from "react"
 
 /** Event handler for useEChartsInstance (uses core EChartsType) */
 type CoreEventHandler = (
-  params: Record<string, unknown>,
-  chart: EChartsType,
+	params: Record<string, unknown>,
+	chart: EChartsType,
 ) => void
 
 /**
@@ -44,120 +44,113 @@ type CoreEventHandler = (
  * Options for useEChartsInstance hook
  */
 export interface UseEChartsInstanceOptions {
-  /** ECharts option configuration */
-  option: EChartsCoreOption
-  /** Event handlers (same API as echarts-for-react onEvents) */
-  events?: Record<string, CoreEventHandler>
-  /** Callback when chart instance is ready */
-  onReady?: (chart: EChartsType) => void
-  /** Theme name (must be registered with echarts.registerTheme) */
-  theme?: string
-  /** Renderer type */
-  renderer?: "canvas" | "svg"
-  /** Whether to auto-resize on container size change */
-  autoResize?: boolean
+	/** ECharts option configuration */
+	option: EChartsCoreOption
+	/** Event handlers (same API as echarts-for-react onEvents) */
+	events?: Record<string, CoreEventHandler>
+	/** Callback when chart instance is ready */
+	onReady?: (chart: EChartsType) => void
+	/** Theme name (must be registered with echarts.registerTheme) */
+	theme?: string
+	/** Renderer type */
+	renderer?: "canvas" | "svg"
+	/** Whether to auto-resize on container size change */
+	autoResize?: boolean
 }
 
 /**
  * Return type for useEChartsInstance hook
  */
 export interface UseEChartsInstanceReturn {
-  /** Get the ECharts instance */
-  getEchartsInstance: () => EChartsType | null
-  /** Ref to the ECharts instance */
-  instanceRef: React.MutableRefObject<EChartsType | null>
+	/** Get the ECharts instance */
+	getEchartsInstance: () => EChartsType | null
+	/** Ref to the ECharts instance */
+	instanceRef: React.MutableRefObject<EChartsType | null>
 }
 
 export function useEChartsInstance(
-  containerRef: RefObject<HTMLDivElement | null>,
-  options: UseEChartsInstanceOptions,
+	containerRef: RefObject<HTMLDivElement | null>,
+	options: UseEChartsInstanceOptions,
 ): UseEChartsInstanceReturn {
-  const {
-    option,
-    events,
-    onReady,
-    theme,
-    renderer = "canvas",
-    autoResize = true,
-  } = options
+	const {
+		option,
+		events,
+		onReady,
+		theme,
+		renderer = "canvas",
+		autoResize = true,
+	} = options
 
-  const instanceRef = useRef<EChartsType | null>(null)
-  const eventsRef = useRef<Record<string, CoreEventHandler> | undefined>(
-    events,
-  )
-  const resizeObserverRef = useRef<ResizeObserver | null>(null)
+	const instanceRef = useRef<EChartsType | null>(null)
+	const eventsRef = useRef<Record<string, CoreEventHandler> | undefined>(
+		events,
+	)
+	const resizeObserverRef = useRef<ResizeObserver | null>(null)
 
-  // Keep events ref up to date
-  useEffect(() => {
-    eventsRef.current = events
-  }, [events])
+	// Keep events ref up to date
+	useEffect(() => {
+		eventsRef.current = events
+	}, [events])
 
-  // Initialize chart
-  useEffect(() => {
-    if (!containerRef.current) return
+	// Initialize chart
+	useEffect(() => {
+		if (!containerRef.current) return
 
-    // Dispose existing instance if any
-    if (instanceRef.current) {
-      instanceRef.current.dispose()
-    }
+		// Dispose existing instance if any
+		if (instanceRef.current) {
+			instanceRef.current.dispose()
+		}
 
-    // Initialize ECharts
-    const chart = echarts.init(containerRef.current, theme, { renderer })
-    instanceRef.current = chart
+		// Initialize ECharts
+		const chart = echarts.init(containerRef.current, theme, { renderer })
+		instanceRef.current = chart
 
-    // Set initial option
-    chart.setOption(option)
+		// Set initial option
+		chart.setOption(option)
 
-    // Bind events (same pattern as echarts-for-react)
-    if (eventsRef.current) {
-      for (const [eventName, handler] of Object.entries(eventsRef.current)) {
-        // biome-ignore lint/suspicious/noExplicitAny: ECharts event params vary by event type
-        chart.on(eventName, (params: any) => {
-          handler(params, chart)
-        })
-      }
-    }
+		// Bind events (same pattern as echarts-for-react)
+		if (eventsRef.current) {
+			for (const [eventName, handler] of Object.entries(eventsRef.current)) {
+				// biome-ignore lint/suspicious/noExplicitAny: ECharts event params vary by event type
+				chart.on(eventName, (params: any) => {
+					handler(params, chart)
+				})
+			}
+		}
 
-    // Ready callback
-    onReady?.(chart)
+		// Ready callback
+		onReady?.(chart)
 
-    // Auto-resize observer
-    if (autoResize && containerRef.current) {
-      resizeObserverRef.current = new ResizeObserver(() => {
-        if (instanceRef.current && !instanceRef.current.isDisposed()) {
-          instanceRef.current.resize()
-        }
-      })
-      resizeObserverRef.current.observe(containerRef.current)
-    }
+		// Auto-resize observer
+		if (autoResize && containerRef.current) {
+			resizeObserverRef.current = new ResizeObserver(() => {
+				if (instanceRef.current && !instanceRef.current.isDisposed()) {
+					instanceRef.current.resize()
+				}
+			})
+			resizeObserverRef.current.observe(containerRef.current)
+		}
 
-    // Cleanup
-    return () => {
-      resizeObserverRef.current?.disconnect()
-      if (instanceRef.current && !instanceRef.current.isDisposed()) {
-        instanceRef.current.dispose()
-      }
-      instanceRef.current = null
-    }
-  }, [containerRef, theme, renderer, autoResize])
+		// Cleanup
+		return () => {
+			resizeObserverRef.current?.disconnect()
+			if (instanceRef.current && !instanceRef.current.isDisposed()) {
+				instanceRef.current.dispose()
+			}
+			instanceRef.current = null
+		}
+	}, [containerRef, theme, renderer, autoResize, onReady, option])
 
-  // Update option when it changes
-  useEffect(() => {
-    if (instanceRef.current && !instanceRef.current.isDisposed()) {
-      instanceRef.current.setOption(option, { notMerge: false })
-      // Resize after option update to ensure proper rendering
-      // This is especially important when gap percentages change based on container size
-      instanceRef.current.resize()
-    }
-  }, [option])
+	// Update option when it changes (handled in initialization effect)
+	// No separate effect needed since option is in init dependencies
 
-  // Expose chart instance getter
-  const getEchartsInstance = useCallback(() => instanceRef.current, [])
+	// Expose chart instance getter
+	const getEchartsInstance = useCallback(() => instanceRef.current, [])
 
-  return {
-    getEchartsInstance,
-    instanceRef,
-  }
+	return {
+		getEchartsInstance,
+		instanceRef,
+	}
 }
 
 /**
