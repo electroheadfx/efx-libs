@@ -1,0 +1,24 @@
+{
+  "name": "efx-example-vite-react-simple",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite dev --port 4173",
+    "build": "vite build",
+    "preview": "vite preview --port 4174"
+  },
+  "dependencies": {
+    "@efxlab/chart-react": "^0.2.0",
+    "@efxlab/layout-react": "^0.2.0",
+    "echarts": "^6.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^5.0.4",
+    "typescript": "^5.7.2",
+    "vite": "^7.1.7"
+  }
+}
